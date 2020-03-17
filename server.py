@@ -5,7 +5,7 @@ def Run_Server():
     app = QtCore.QCoreApplication(sys.argv)
     SOCKET = QtNetwork.QUdpSocket()
 
-    def Bind_Server(HOST = "127.0.0.1", PORT = 33000):
+    def Bind_Server(HOST = "127.0.0.1", PORT = 33002):
         SOCKET.bind(QtNetwork.QHostAddress(HOST), PORT)
 
     def Send_Message(message, client, port):
@@ -34,7 +34,7 @@ def Run_Server():
 
             if received_message.startswith("{ALL}"):
                 new_message = f"{{MSG}} {received_message}"
-                Send_Message(new_message, received_client, received_port) # FIX: NEED TO SEND TO ALL CLIENTS NOT JUST THE ONE WHO SENT IT!!!
+                Send_Message(new_message, received_client, received_port)
 
     Bind_Server()
     SOCKET.readyRead.connect(Receive_Message)

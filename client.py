@@ -85,7 +85,7 @@ def Run_Client():
     Port_Number = QtWidgets.QLineEdit(Server_Settings_Menu)
     Port_Number.setObjectName("Port_Number")
     Port_Number.setGeometry(int(Scaled_App_Width/13.2), int(Scaled_App_Height/4.56), int(Scaled_App_Width/11.6), int(Scaled_App_Height/33))
-    Port_Number.setText("33000") # Prefilled default as also provided in server.py
+    Port_Number.setText("33002") # Prefilled default as also provided in server.py
     
     Server_Button = QtWidgets.QPushButton(Server_Settings_Menu)
     Server_Button.setObjectName("Server_Button")   
