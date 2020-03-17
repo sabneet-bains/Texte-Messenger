@@ -18,7 +18,7 @@ def Run_Client():
     Chat_Window.setObjectName("Chat_Window")
     Chat_Window.setGeometry(int(Screen_Size.width()/2)-int(Scaled_App_Width/2),int(Screen_Size.height()/2)-int(Scaled_App_Height/2),Scaled_App_Width,Scaled_App_Height)
     Chat_Window.setWindowTitle("  texte") # Chosen Brand Name for the Client
-    Chat_Window.setWindowIcon(QtGui.QIcon(os.getcwd() + "/icons/texte_icon.svg"))
+    Chat_Window.setWindowIcon(QtGui.QIcon(f"{os.getcwd()}/icons/texte_icon.svg"))
 
 # Creates the left menu bar:
     Chat_Settings_Menu = QtWidgets.QFrame(Chat_Window)
@@ -56,7 +56,7 @@ def Run_Client():
     Server_Settings_Icon.setObjectName("Server_Settings_Icon")
     Server_Settings_Icon.setGeometry(int(Scaled_App_Width/60), int(Scaled_App_Height/45), int(Scaled_App_Width/28), int(Scaled_App_Height/22))
     Server_Settings_Icon.setStyleSheet("background: transparent; border: none;")
-    Server_Settings_Icon.setIcon(QtGui.QIcon(os.getcwd() + "/icons/server_icon.svg"))
+    Server_Settings_Icon.setIcon(QtGui.QIcon(f"{os.getcwd()}/icons/server_icon.svg"))
     Server_Settings_Icon.setIconSize(QtCore.QSize(int(Scaled_App_Width/28), int(Scaled_App_Height/24)))
     Server_Settings_Icon.setCheckable(True) # Turns the pushbutton into a toggle switch
     Server_Settings_Icon.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(color=QtGui.QColor(0, 0, 0, 100), blurRadius=30, xOffset=int(Scaled_App_Width/350), yOffset=int(Scaled_App_Height/350)))
@@ -91,7 +91,7 @@ def Run_Client():
     Server_Button.setObjectName("Server_Button")   
     Server_Button.setGeometry(int(Scaled_App_Width/4.7), int(Scaled_App_Height/5.1), int(Scaled_App_Width/25), int(Scaled_App_Height/20))
     Server_Button.setStyleSheet("background: transparent; border: none;")
-    Server_Button.setIcon(QtGui.QIcon(os.getcwd() + "/icons/enter_icon.svg"))
+    Server_Button.setIcon(QtGui.QIcon(f"{os.getcwd()}/icons/enter_icon.svg"))
     Server_Button.setIconSize(QtCore.QSize(int(Scaled_App_Width/20), int(Scaled_App_Height/17)))
     Server_Button.setCheckable(True) # Turns the pushbutton into a toggle switch
     Server_Button.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(color=QtGui.QColor(0, 0, 0, 100), blurRadius=30, xOffset=int(Scaled_App_Width/300), yOffset=int(Scaled_App_Height/350)))
@@ -106,7 +106,7 @@ def Run_Client():
     User_Avatar.setObjectName("user1") 
     User_Avatar.setGeometry(int(Scaled_App_Width/65), int(Scaled_App_Height/48), int(Scaled_App_Width/20), int(Scaled_App_Height/15))
     User_Avatar.setStyleSheet("background: transparent; border: none;")
-    User_Avatar.setIcon(QtGui.QIcon(os.getcwd() + "/avatars/user1.svg"))
+    User_Avatar.setIcon(QtGui.QIcon(f"{os.getcwd()}/avatars/user1.svg"))
     User_Avatar.setIconSize(QtCore.QSize(int(Scaled_App_Width/20), int(Scaled_App_Height/17)))
     User_Avatar.setCheckable(True) # Turns the pushbutton into a toggle switch
     User_Avatar.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(color=QtGui.QColor(0, 0, 0, 100), blurRadius=30, xOffset=int(Scaled_App_Width/350), yOffset=int(Scaled_App_Height/350)))
@@ -117,7 +117,7 @@ def Run_Client():
     Temporary_Avatar.setObjectName("Temporary_Avatar")
     Temporary_Avatar.setGeometry(int(Scaled_App_Width/65), int(Scaled_App_Height/48), int(Scaled_App_Width/20), int(Scaled_App_Height/15))
     Temporary_Avatar.setStyleSheet("background: transparent; border: none;")
-    Temporary_Avatar.setIcon(QtGui.QIcon(os.getcwd() + "/avatars/user1.svg"))
+    Temporary_Avatar.setIcon(QtGui.QIcon(f"{os.getcwd()}/avatars/user1.svg"))
     Temporary_Avatar.setIconSize(QtCore.QSize(int(Scaled_App_Width/20), int(Scaled_App_Height/17)))
     Temporary_Avatar.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(color=QtGui.QColor(0, 0, 0, 100), blurRadius=30, xOffset=int(Scaled_App_Width/350), yOffset=int(Scaled_App_Height/350)))
 
@@ -152,7 +152,7 @@ def Run_Client():
     Sign_In_Button.setObjectName("Sign_In_Button")   
     Sign_In_Button.setGeometry(int(Scaled_App_Width/4.7), int(Scaled_App_Height/5.1), int(Scaled_App_Width/25), int(Scaled_App_Height/20))
     Sign_In_Button.setStyleSheet("background: transparent; border: none;")
-    Sign_In_Button.setIcon(QtGui.QIcon(os.getcwd() + "/icons/enter_icon.svg"))
+    Sign_In_Button.setIcon(QtGui.QIcon(f"{os.getcwd()}/icons/enter_icon.svg"))
     Sign_In_Button.setIconSize(QtCore.QSize(int(Scaled_App_Width/20), int(Scaled_App_Height/17)))
     Sign_In_Button.setEnabled(False)
     Sign_In_Button.setCheckable(True)
@@ -197,8 +197,8 @@ def Run_Client():
     def Select_Avatar():
         """Allows selection of an avatar thorugh the avatar selection window."""
         Selected_Avatar = User.sender()
-        User_Avatar.setIcon(QtGui.QIcon(os.getcwd() + "/avatars/" + Selected_Avatar.objectName() + ".svg"))
-        Temporary_Avatar.setIcon(QtGui.QIcon(os.getcwd() + "/avatars/" + Selected_Avatar.objectName() + ".svg"))
+        User_Avatar.setIcon(QtGui.QIcon(f"{os.getcwd()}/avatars/{Selected_Avatar.objectName()}.svg"))
+        Temporary_Avatar.setIcon(QtGui.QIcon(f"{os.getcwd()}/avatars/{Selected_Avatar.objectName()}.svg"))
         User_Avatar.setObjectName(Selected_Avatar.objectName())
         User_Avatar.toggle()
         Avatar_Selector_Widget_Closing_Animation.start()
@@ -275,10 +275,10 @@ def Run_Client():
             y = int(Avatar_Selector_Widget.height()/1.611)
 
         User = QtWidgets.QPushButton(Page)
-        User.setObjectName("User" + str(i+1))
+        User.setObjectName(f"User{str(i + 1)}")
         User.setGeometry(x, y, int(Avatar_Selector_Widget.width()/5), int(Avatar_Selector_Widget.height()/5.9))
         User.setStyleSheet("background: transparent; border: none;")
-        User.setIcon(QtGui.QIcon(os.getcwd() + "/avatars/User" + str(i+1) +".svg"))
+        User.setIcon(QtGui.QIcon(f"{os.getcwd()}/avatars/User{str(i + 1)}.svg"))
         User.setIconSize(QtCore.QSize(int(Avatar_Selector_Widget.width()/5), int(Avatar_Selector_Widget.height()/5.9)))
         User.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(color=QtGui.QColor(0, 0, 0, 100), blurRadius=30, xOffset=int(Scaled_App_Width/350), yOffset=int(Scaled_App_Height/350)))
         User.clicked.connect(Select_Avatar)
@@ -288,7 +288,7 @@ def Run_Client():
             Avatar_Selector_Next_Button.setObjectName("Avatar_Selector_Next_Button")
             Avatar_Selector_Next_Button.setGeometry(int(Avatar_Selector_Widget.width()/1.29), int(Avatar_Selector_Widget.height()/1.23), int(Avatar_Selector_Widget.width()/5), int(Avatar_Selector_Widget.height()/5.9)) 
             Avatar_Selector_Next_Button.setStyleSheet("background: transparent; border: none;")
-            Avatar_Selector_Next_Button.setIcon(QtGui.QIcon(os.getcwd() + "/icons/next_icon.svg"))
+            Avatar_Selector_Next_Button.setIcon(QtGui.QIcon(f"{os.getcwd()}/icons/next_icon.svg"))
             Avatar_Selector_Next_Button.setIconSize(QtCore.QSize(int(Avatar_Selector_Widget.width()/6.25), int(Avatar_Selector_Widget.height()/14.75)))
             Avatar_Selector_Next_Button.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(color=QtGui.QColor(0, 0, 0, 100), blurRadius=10, xOffset=int(Scaled_App_Width/300), yOffset=int(Scaled_App_Height/350)))
             Avatar_Selector_Next_Button.clicked.connect(Scroll_Avatar_Selector)
@@ -298,7 +298,7 @@ def Run_Client():
     Chat_Settings_Icon.setObjectName("Chat_Settings_Icon")
     Chat_Settings_Icon.setGeometry(int(Scaled_App_Width/65), int(Scaled_App_Height/60), int(Scaled_App_Width/23), int(Scaled_App_Height/17))
     Chat_Settings_Icon.setStyleSheet("background: transparent; border: none;")
-    Chat_Settings_Icon.setIcon(QtGui.QIcon(os.getcwd() + "/icons/chat_icon.svg"))
+    Chat_Settings_Icon.setIcon(QtGui.QIcon(f"{os.getcwd()}/icons/chat_icon.svg"))
     Chat_Settings_Icon.setIconSize(QtCore.QSize(int(Scaled_App_Width/23), int(Scaled_App_Height/19)))
     Chat_Settings_Icon.setCheckable(True) # Turns the pushbutton into a toggle switch
     Chat_Settings_Icon.setGraphicsEffect(QtWidgets.QGraphicsDropShadowEffect(color=QtGui.QColor(0, 0, 0, 100), blurRadius=30, xOffset=int(Scaled_App_Width/350), yOffset=int(Scaled_App_Height/350)))
@@ -336,7 +336,7 @@ def Run_Client():
     Chat_Confirm_Button.setObjectName("Chat_Confirm_Button") 
     Chat_Confirm_Button.setGeometry(int(Scaled_App_Width/4.7), int(Scaled_App_Height/4.4), int(Scaled_App_Width/25), int(Scaled_App_Height/20))
     Chat_Confirm_Button.setStyleSheet("background: transparent; border: none;")
-    Chat_Confirm_Button.setIcon(QtGui.QIcon(os.getcwd() + "/icons/check_icon.svg"))
+    Chat_Confirm_Button.setIcon(QtGui.QIcon(f"{os.getcwd()}/icons/check_icon.svg"))
     Chat_Confirm_Button.setIconSize(QtCore.QSize(int(Scaled_App_Width/21), int(Scaled_App_Height/18)))
     Chat_Confirm_Button.setEnabled(False)
     Chat_Confirm_Button.setCheckable(True) # Turns the pushbutton into a toggle switch
@@ -352,7 +352,7 @@ def Run_Client():
     Chat_Theme_Drop_Down.setObjectName("Chat_Theme_Drop_Down")
     Chat_Theme_Drop_Down.setGeometry(int(Chat_Theme.x()/1.26), 0, int(Chat_Theme.width()/3), int(Chat_Theme.height()/1.1))
     Chat_Theme_Drop_Down.setStyleSheet("background: transparent; border: none;")
-    Chat_Theme_Drop_Down.setIcon(QtGui.QIcon(os.getcwd() + "/icons/drop_down_icon.svg"))
+    Chat_Theme_Drop_Down.setIcon(QtGui.QIcon(f"{os.getcwd()}/icons/drop_down_icon.svg"))
     Chat_Theme_Drop_Down.setIconSize(QtCore.QSize(int(Scaled_App_Width/25.6), int(Scaled_App_Height/20.7)))
     Chat_Theme_Drop_Down.setVisible(False)
 
@@ -364,7 +364,7 @@ def Run_Client():
     Chat_Selector_Drop_Down.setObjectName("Chat_Selector_Drop_Down")
     Chat_Selector_Drop_Down.setGeometry(int(Chat_Selector.x()/1.3), 0, int(Chat_Selector.width()/3), int(Chat_Selector.height()/1.1))
     Chat_Selector_Drop_Down.setStyleSheet("background: transparent; border: none;")
-    Chat_Selector_Drop_Down.setIcon(QtGui.QIcon(os.getcwd() + "/icons/drop_down_icon.svg"))
+    Chat_Selector_Drop_Down.setIcon(QtGui.QIcon(f"{os.getcwd()}/icons/drop_down_icon.svg"))
     Chat_Selector_Drop_Down.setIconSize(QtCore.QSize(int(Scaled_App_Width/25.6), int(Scaled_App_Height/20.7)))
     Chat_Selector_Drop_Down.setVisible(False)
 
@@ -391,7 +391,7 @@ def Run_Client():
     Attach_Button.setObjectName("Attach_Button")
     Attach_Button.setGeometry(int(Scaled_App_Width/1.075), int(Scaled_App_Height), int(Scaled_App_Width/25.09), int(Scaled_App_Height/20.29))
     Attach_Button.setStyleSheet("background: transparent; border: none;")
-    Attach_Button.setIcon(QtGui.QIcon(os.getcwd() + "/icons/attach_icon.svg"))
+    Attach_Button.setIcon(QtGui.QIcon(f"{os.getcwd()}/icons/attach_icon.svg"))
     Attach_Button.setIconSize(QtCore.QSize(int(Scaled_App_Width/25.6), int(Scaled_App_Height/20.7)))
     Attach_Button.setEnabled(False) # Keeps the button disabled from interactions before sign-in
 
@@ -462,45 +462,45 @@ def Run_Client():
             Main_Message_Field_Background_Color = "#C0C0D8"
             Main_Message_Field_Text_Color = "#6A5878"
 
-        Server_Settings_Menu.setStyleSheet("background: " + Main_Background_Color) # Color Line
-        Server_Settings_Title.setStyleSheet("color: " + Main_Title_Color + "; font: " + Scaled_Font_Size + "px;") # Color Line
-        Host_Title.setStyleSheet("color: " + Main_Title_Color + "; font: " + Scaled_Font_Size + "px;") # Color Line
-        Host_Address.setStyleSheet("background: transparent; border: transparent; border-bottom: " + Scaled_Underline_Size + " solid " + Main_Underline_Color + "; padding: 0 5px; color: " + Main_Text_Color + "; font: " + Scaled_Font_Size + "px;") # Color Line
-        Port_Title.setStyleSheet("color: " + Main_Title_Color + "; font: " + Scaled_Font_Size + "px;") # Color Line
-        Port_Number.setStyleSheet("background: transparent; border: transparent; border-bottom: " + Scaled_Underline_Size + " solid " + Main_Underline_Color + "; padding: 0 5px; color: " + Main_Text_Alternate_Color + "; font: " + Scaled_Font_Size + "px;") # Color Line
+        Server_Settings_Menu.setStyleSheet(f"background: {Main_Background_Color}")
+        Server_Settings_Title.setStyleSheet(f"color: {Main_Title_Color}; font: {Scaled_Font_Size}px;")
+        Host_Title.setStyleSheet(f"color: {Main_Title_Color}; font: {Scaled_Font_Size}px;")
+        Host_Address.setStyleSheet(f"background: transparent; border: transparent; border-bottom: {Scaled_Underline_Size} solid {Main_Underline_Color}; padding: 0 5px; color: {Main_Text_Color}; font: {Scaled_Font_Size}px;")
+        Port_Title.setStyleSheet(f"color: {Main_Title_Color}; font: {Scaled_Font_Size}px;")
+        Port_Number.setStyleSheet(f"background: transparent; border: transparent; border-bottom: {Scaled_Underline_Size} solid {Main_Underline_Color}; padding: 0 5px; color: {Main_Text_Alternate_Color}; font: {Scaled_Font_Size}px;")
 
         if Server_Connection_Status.text() == "<html><head/><body><center>NOT CONNECTED</center></body></html>":
-            Server_Connection_Status.setStyleSheet("color: " + Main_Status_Banner_Disconnected_Color + "; background: transparent; border-bottom: 2px solid " + Main_Status_Banner_Shadow_Color + "; font: " + Scaled_Font_Size + "px;") # Color Line
+            Server_Connection_Status.setStyleSheet(f"color: {Main_Status_Banner_Disconnected_Color}; background: transparent; border-bottom: 2px solid {Main_Status_Banner_Shadow_Color}; font: {Scaled_Font_Size}px;")
         else:
-            Server_Connection_Status.setStyleSheet("color: " + Main_Status_Banner_Connected_Color + "; background: transparent; border-bottom: 2px solid " + Main_Status_Banner_Shadow_Color + "; font: " + Scaled_Font_Size + "px;") # Color Line
+            Server_Connection_Status.setStyleSheet(f"color: {Main_Status_Banner_Connected_Color}; background: transparent; border-bottom: 2px solid {Main_Status_Banner_Shadow_Color}; font: {Scaled_Font_Size}px;")
         
-        Sign_In_Menu.setStyleSheet("background: " + Main_Background_Color) # Color Line
-        Sign_In_Title.setStyleSheet("color: " + Main_Title_Color + "; font: " + Scaled_Font_Size + "px;") # Color Line
-        Username_Title.setStyleSheet("color: " + Main_Title_Color + "; font: " + Scaled_Font_Size + "px;") # Color Line
-        Username.setStyleSheet("background: transparent; border: transparent; border-bottom: " + Scaled_Underline_Size + " solid " + Main_Underline_Color + "; padding: 0 5px; color: " + Main_Text_Color + "; font: " + Scaled_Font_Size + "px;")
-        Password_Title.setStyleSheet("color: " + Main_Title_Color + "; font: " + Scaled_Font_Size + "px;") # Color Line
-        Password.setStyleSheet("background: transparent; border: transparent; border-bottom: " + Scaled_Underline_Size + " solid " + Main_Underline_Color + "; padding: 0 5px; color: " + Main_Text_Alternate_Color + "; font: " + Scaled_Font_Size + "px;") # Color Line
+        Sign_In_Menu.setStyleSheet(f"background: {Main_Background_Color}")
+        Sign_In_Title.setStyleSheet(f"color: {Main_Title_Color}; font: {Scaled_Font_Size}px;")
+        Username_Title.setStyleSheet(f"color: {Main_Title_Color}; font: {Scaled_Font_Size}px;")
+        Username.setStyleSheet(f"background: transparent; border: transparent; border-bottom: {Scaled_Underline_Size} solid {Main_Underline_Color}; padding: 0 5px; color: {Main_Text_Color}; font: {Scaled_Font_Size}px;")
+        Password_Title.setStyleSheet(f"color: {Main_Title_Color}; font: {Scaled_Font_Size}px;")
+        Password.setStyleSheet(f"background: transparent; border: transparent; border-bottom: {Scaled_Underline_Size} solid {Main_Underline_Color}; padding: 0 5px; color: {Main_Text_Alternate_Color}; font: {Scaled_Font_Size}px;")
         
         if User_Connection_Status.text() == "<html><head/><body><center>SIGNED-OUT       </center></body></html>":
-            User_Connection_Status.setStyleSheet("color: " + Main_Status_Banner_Disconnected_Color + "; background: transparent; border-bottom: 2px solid " + Main_Status_Banner_Shadow_Color + "; font: " + Scaled_Font_Size + "px;") # Color Line
+            User_Connection_Status.setStyleSheet(f"color: {Main_Status_Banner_Disconnected_Color}; background: transparent; border-bottom: 2px solid {Main_Status_Banner_Shadow_Color}; font: {Scaled_Font_Size}px;")
         else:
-            User_Connection_Status.setStyleSheet("color: " + Main_Status_Banner_Connected_Color + "; background: transparent; border-bottom: 2px solid " + Main_Status_Banner_Shadow_Color + "; font: " + Scaled_Font_Size + "px;") # Color Line
+            User_Connection_Status.setStyleSheet(f"color: {Main_Status_Banner_Connected_Color}; background: transparent; border-bottom: 2px solid {Main_Status_Banner_Shadow_Color}; font: {Scaled_Font_Size}px;")
 
-        # Avatar_Selector_Widget.setStyleSheet("background: " + Main_Background_Color) # Color Line
-        Avatar_Selector_Widget.setStyleSheet("background: #31315B; border-radius: " + Scaled_Border_Radius + "px") # Color Line
+        # Avatar_Selector_Widget.setStyleSheet(f"background: {Main_Background_Color}")
+        Avatar_Selector_Widget.setStyleSheet(f"background: #31315B; border-radius: {Scaled_Border_Radius}px")
         
-        Chat_Settings_Menu.setStyleSheet("background: " + Main_Background_Color) # Color Line
-        Chat_Settings_Title.setStyleSheet("color: " + Main_Title_Color + "; font: " + Scaled_Font_Size + "px;") # Color Line
-        Chat_Theme_Title.setStyleSheet("color: " + Main_Title_Color + "; font: " + Scaled_Font_Size + "px;") # Color Line
-        Chat_Theme.setStyleSheet("background: " + Main_Background_Color + "; border: none; border-bottom: " + Scaled_Underline_Size + " solid " + Main_Underline_Color + "; padding: 0 5px; color: " + Main_Text_Color + "; font: " + Scaled_Font_Size + "px;") # Color Line
-        Chat_Selector_Title.setStyleSheet("color: " + Main_Title_Color + "; font: " + Scaled_Font_Size + "px;") # Color Line
-        Chat_Selector.setStyleSheet("background: " + Main_Background_Color + "; border: none; border-bottom: " + Scaled_Underline_Size + " solid " + Main_Underline_Color + "; padding: 0 5px; color: " + Main_Text_Alternate_Color + "; font: " + Scaled_Font_Size + "px;") # Color Line
-        Chat_Theme_Drop_Down_Background.setStyleSheet("background: " + Main_Background_Color) # Color Line
-        Chat_Selector_Drop_Down_Background.setStyleSheet("background: " + Main_Background_Color) # Color Line
+        Chat_Settings_Menu.setStyleSheet(f"background: {Main_Background_Color}")
+        Chat_Settings_Title.setStyleSheet(f"color: {Main_Title_Color}; font: {Scaled_Font_Size}px;")
+        Chat_Theme_Title.setStyleSheet(f"color: {Main_Title_Color}; font: {Scaled_Font_Size}px;")
+        Chat_Theme.setStyleSheet(f"background: {Main_Background_Color}; border: none; border-bottom: {Scaled_Underline_Size} solid {Main_Underline_Color}; padding: 0 5px; color: {Main_Text_Color}; font: {Scaled_Font_Size}px;")
+        Chat_Selector_Title.setStyleSheet(f"color: {Main_Title_Color}; font: {Scaled_Font_Size}px;")
+        Chat_Selector.setStyleSheet(f"background: {Main_Background_Color}; border: none; border-bottom: {Scaled_Underline_Size} solid {Main_Underline_Color}; padding: 0 5px; color: {Main_Text_Alternate_Color}; font: {Scaled_Font_Size}px;")
+        Chat_Theme_Drop_Down_Background.setStyleSheet(f"background: {Main_Background_Color}")
+        Chat_Selector_Drop_Down_Background.setStyleSheet(f"background: {Main_Background_Color}")
         
-        Chat_Window.setStyleSheet("background-color: " + Main_Chat_Log_Background_Color)
-        Chat_Log.setStyleSheet("border: none; color: " + Main_Chat_Log_Text_Color + "; background-color: " + Main_Chat_Log_Background_Color + "; padding: 10px 20px; font: " + Scaled_Font_Size + "px;") # Color Line
-        Message_Field.setStyleSheet("border: 0px solid #000000; color: " + Main_Message_Field_Text_Color + "; background-color: " + Main_Message_Field_Background_Color + "; border-radius: " + Scaled_Border_Radius + "px; padding: 0 15px; font: " + Scaled_Font_Size + "px;") # Color Line
+        Chat_Window.setStyleSheet(f"background-color: {Main_Chat_Log_Background_Color}")
+        Chat_Log.setStyleSheet(f"border: none; color: {Main_Chat_Log_Text_Color}; background-color: {Main_Chat_Log_Background_Color}; padding: 10px 20px; font: {Scaled_Font_Size}px;")
+        Message_Field.setStyleSheet(f"border: 0px solid #000000; color: {Main_Message_Field_Text_Color}; background-color: {Main_Message_Field_Background_Color}; border-radius: {Scaled_Border_Radius}px; padding: 0 15px; font: {Scaled_Font_Size}px;")
 
     Theme("Default") # Starts the app in default theme
 
@@ -513,7 +513,7 @@ def Run_Client():
                 SOCKET.connectToHost(QtNetwork.QHostAddress(HOST), PORT)
                 Send_Message("{CONNECT}")
 
-                Server_Button.setIcon(QtGui.QIcon(os.getcwd() + "/icons/exit_icon.svg"))
+                Server_Button.setIcon(QtGui.QIcon(f"{os.getcwd()}/icons/exit_icon.svg"))
                 Server_Connection_Status.setText("<html><head/><body><center>CONNECTED     </center></body></html>")
                 Theme(Chat_Theme.currentText())
 
@@ -530,7 +530,7 @@ def Run_Client():
             else:
                 Send_Message("{DISCONNECT}")
 
-                Server_Button.setIcon(QtGui.QIcon(os.getcwd() + "/icons/enter_icon.svg"))
+                Server_Button.setIcon(QtGui.QIcon(f"{os.getcwd()}/icons/enter_icon.svg"))
                 Server_Connection_Status.setText("<html><head/><body><center>NOT CONNECTED</center></body></html>")
                 Theme(Chat_Theme.currentText())
 
@@ -550,7 +550,7 @@ def Run_Client():
             Send_Message("{REGISTER}")
             Server_Button.setEnabled(False)
 
-            Sign_In_Button.setIcon(QtGui.QIcon(os.getcwd() + "/icons/exit_icon.svg"))
+            Sign_In_Button.setIcon(QtGui.QIcon(f"{os.getcwd()}/icons/exit_icon.svg"))
             User_Connection_Status.setText("<html><head/><body><center>SIGNED-IN        </center></body></html>")
             Theme(Chat_Theme.currentText())
             
@@ -572,7 +572,7 @@ def Run_Client():
             Send_Message("{UNREGISTER}")
             Server_Button.setEnabled(True)
 
-            Sign_In_Button.setIcon(QtGui.QIcon(os.getcwd() + "/icons/enter_icon.svg"))
+            Sign_In_Button.setIcon(QtGui.QIcon(f"{os.getcwd()}/icons/enter_icon.svg"))
             User_Connection_Status.setText("<html><head/><body><center>SIGNED-OUT       </center></body></html>")
             Theme(Chat_Theme.currentText())
 
@@ -622,7 +622,7 @@ def Run_Client():
     def Chat_Target():
         """Provides the option to select the recipient of one's messages."""
         if Chat_Confirm_Button.isChecked():
-            Chat_Confirm_Button.setIcon(QtGui.QIcon(QtGui.QPixmap(os.getcwd() + "/icons/cancel_icon.svg")))
+            Chat_Confirm_Button.setIcon(QtGui.QIcon(QtGui.QPixmap(f"{os.getcwd()}/icons/cancel_icon.svg")))
             Chat_Theme.setEnabled(False)
             Chat_Theme_Drop_Down.setVisible(False)
             Chat_Selector.setEnabled(False)
@@ -638,7 +638,7 @@ def Run_Client():
             Attach_Button.setEnabled(True)
             
         else:
-            Chat_Confirm_Button.setIcon(QtGui.QIcon(QtGui.QPixmap(os.getcwd() + "/icons/check_icon.svg")))
+            Chat_Confirm_Button.setIcon(QtGui.QIcon(QtGui.QPixmap(f"{os.getcwd()}/icons/check_icon.svg")))
             Chat_Theme.setEnabled(True)
             Chat_Theme_Drop_Down.setVisible(True)
             Chat_Selector.setEnabled(True)
@@ -668,7 +668,7 @@ def Run_Client():
     Chat_Theme_Drop_Down.clicked.connect(lambda: Better_Drop_Down(0))
     Chat_Selector_Drop_Down.clicked.connect(lambda: Better_Drop_Down(1))
     Chat_Confirm_Button.clicked.connect(Chat_Target)
-    Message_Field.returnPressed.connect(lambda: Send_Message("{FIELD}" + "{" + Chat_Selector.currentText() + "}" + Message_Field.text()))
+    Message_Field.returnPressed.connect(lambda: Send_Message(f"{{FIELD}}{{{Chat_Selector.currentText()}}}Message_Field.text()"))
     Attach_Button.clicked.connect(Attach_Picture)
 
 # Draws the entire GUI:
@@ -682,4 +682,3 @@ def Run_Client():
 
 if __name__ == "__main__":
     Run_Client()
-

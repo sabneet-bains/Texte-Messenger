@@ -18,24 +18,23 @@ def Run_Server():
             received_client = received_client.toString()
 
             if received_message.startswith("{CONNECT}"):
-                print(received_client + ":" + str(received_port) + " has connected.")
+                print(f"{received_client}:{str(received_port)} has connected.")
 
             if received_message.startswith("{DISCONNECT}"):
                 SOCKET.close()
                 break
 
             if received_message.startswith("{REGISTER}"):
-                new_message = "{MSG}Welcome %s!" % received_client
+                new_message = f"{{MSG}}Welcome {received_client}!"
                 Send_Message(new_message, received_client, received_port)
 
             if received_message.startswith("{UNREGISTER}"):
-                new_message = "{MSG}Bye %s!" % received_client
+                new_message = f"{{MSG}}Bye {received_client}!"
                 Send_Message(new_message, received_client, received_port)
 
             if received_message.startswith("{ALL}"):
-                new_message = "{MSG}" + received_message
+                new_message = f"{{MSG}} {received_message}"
                 Send_Message(new_message, received_client, received_port) # FIX: NEED TO SEND TO ALL CLIENTS NOT JUST THE ONE WHO SENT IT!!!
-
 
     Bind_Server()
     SOCKET.readyRead.connect(Receive_Message)
