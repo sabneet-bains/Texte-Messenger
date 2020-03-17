@@ -1,2 +1,2 @@
-# UDP-Messaging
+# Qt-Messaging
 
