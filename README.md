@@ -4,6 +4,8 @@ Texte is a Python based Qt graphical instant messanging program to
 appreciation for the parameters to be considered in selecting an appropriate sort.
 Hence, three recursive Quicksort algorithms and one Natural Merge Sort were considered.
 
+![](https://github.com/sabneet95/Qt-Messaging/blob/master/messaging.png)
+
 → `To compare, the program reads a user-provided directory with input files of four sizes: 50, 1000, 2000, 5000 and 10000 integers, and three versions including random, reverse, and normal.`
 
 ## Requirements
