@@ -4,7 +4,7 @@ Texte is a Python-based Qt graphical instant messaging program utilizing the QUd
 
 ![](https://github.com/sabneet95/Texte-Messenger/blob/master/messaging.png)
 
-→ `Currently, the program runs both the server and the clients on the same host network but will be extended to a standalone server in the future`
+→ `Currently, the program runs both the server and the clients on the same host network but will be extended to a standalone server in the future.`
 
 ## Requirements
 
