@@ -48,13 +48,13 @@ if __name__ == "__main__":
     Run_Server()
 ```
 
-2)	Using an additional terminal tab, run the client.py
+2)	Using an additional terminal tab, _run_ the client.py
 
 ```
     >>  client.py █
 ```
 
-3)	Make sure the client hostname and port match with the server specifications
+3)	Make sure the client hostname and port match with the server specifications:
 
 ```python
     HOST = "127.0.0.1", PORT = 33002
