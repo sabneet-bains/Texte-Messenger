@@ -9,6 +9,7 @@ Texte is a Python-based Qt graphical instant messaging program utilizing the QUd
 ## Requirements
 
 [Python 3.9.1 (64-bit) or above](https://www.python.org/downloads/)
+
 [PyQt5](https://www.riverbankcomputing.com/software/pyqt/download)
 
 ## Build Tested
