@@ -4,7 +4,7 @@ Texte is a Python-based Qt graphical instant messaging program utilizing the QUd
 
 ![](https://github.com/sabneet95/Texte-Messenger/blob/master/messaging.png)
 
-→ `To compare, the program reads a user-provided directory with input files of four sizes: 50, 1000, 2000, 5000 and 10000 integers, and three versions including random, reverse, and normal.`
+→ `Currently, the program runs both the server and the clients on the same host network but will be extended to a standalone server in the future`
 
 ## Requirements
 
@@ -29,7 +29,6 @@ Visual Studio Code
 
 1)	Open the project in **Visual Studio Code** > _run_ the server.py
 
-
 ```python
 import sys, os
 from PyQt5 import QtCore, QtGui, QtWidgets, QtNetwork
@@ -49,7 +48,7 @@ if __name__ == "__main__":
     Run_Server()
 ```
 
-2)	Using an additional terminal tab run the client.py
+2)	Using an additional terminal tab, run the client.py
 
 ```
     >>  client.py █
@@ -57,9 +56,15 @@ if __name__ == "__main__":
 
 3)	Make sure the client hostname and port match with the server specifications
 
+```python
+    HOST = "127.0.0.1", PORT = 33002
+```
 
 4)	Open another client session through the terminal and began messaging!
 
+```
+    >>  client.py █
+```
 
 ## Contributing
 
