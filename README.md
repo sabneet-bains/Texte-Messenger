@@ -1,8 +1,6 @@
 # Texte - Instant Messenger
 
-Texte is a Python based Qt graphical instant messanging program to 
-appreciation for the parameters to be considered in selecting an appropriate sort.
-Hence, three recursive Quicksort algorithms and one Natural Merge Sort were considered.
+Texte is a Python-based Qt graphical instant messaging program utilizing the QUdpSocket for semi-secure peer-to-peer communications. 
 
 ![](https://github.com/sabneet95/Texte-Messenger/blob/master/messaging.png)
 
@@ -10,10 +8,8 @@ Hence, three recursive Quicksort algorithms and one Natural Merge Sort were cons
 
 ## Requirements
 
-[Java SE Development Kit 15.0.1](https://www.oracle.com/java/technologies/javase-jdk15-downloads.html)
-
-Set of specifically formatted input files included in:
-* _"~/input_files/"_
+[Python 3.9.1 (64-bit) or above](https://www.python.org/downloads/)
+[PyQt5](https://www.riverbankcomputing.com/software/pyqt/download)
 
 ## Build Tested
 
