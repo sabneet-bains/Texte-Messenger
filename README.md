@@ -1,10 +1,13 @@
 # Texte - Instant Messenger
 
-Texte is a Python-based Qt graphical instant messaging program utilizing the QUdpSocket for semi-secure peer-to-peer communications. 
+Texte is a Python-based, Qt graphical instant messaging program that leverages the QUdpSocket for semi-secure, peer-to-peer communications.
 
 ![](https://github.com/sabneet95/Texte-Messenger/blob/master/messaging.png)
 
-→ `Currently, the program runs both the server and the clients on the same host network but will be extended to a standalone server in the future.`
+## Key Features
+* Implements the Qt and QUdpSocket libraries for GUI and networking, respectively
+* Offers semi-secure, peer-to-peer communication
+* Currently runs both server and clients on the same host network, with plans to extend to standalone server support in the future.
 
 ## Requirements
 
@@ -12,7 +15,7 @@ Texte is a Python-based Qt graphical instant messaging program utilizing the QUd
 
 [PyQt5](https://www.riverbankcomputing.com/software/pyqt/download)
 
-## Build Tested
+## Tested Environment
 
 Visual Studio Code
 * Version: 1.52.1 (system setup)
@@ -25,7 +28,7 @@ Visual Studio Code
 * Memory: 1981M
 * Cores: 8
 
-## Usage
+## Getting Started
 
 1)	Open the project in **Visual Studio Code** > _run_ the server.py
 
@@ -60,7 +63,7 @@ if __name__ == "__main__":
     HOST = "127.0.0.1", PORT = 33002
 ```
 
-4)	Open another client session through the terminal and began messaging!
+4)	Open another client session through the terminal and start messaging!
 
 ```
     >>  client.py █
@@ -68,10 +71,8 @@ if __name__ == "__main__":
 
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
+The project welcomes pull requests. For major changes, please open an issue first to discuss the proposed changes. Please make sure to update tests as appropriate.
 
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+This repository is licensed under the [MIT](https://choosealicense.com/licenses/mit/) License.
