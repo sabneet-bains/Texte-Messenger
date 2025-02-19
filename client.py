@@ -1,3 +1,23 @@
+#!/usr/bin/env python3
+"""
+Chat Client
+
+This script implements a production‑ready chat client using PyQt6.
+It supports both UDP and TCP protocols and features a fully customizable GUI that includes:
+  - A main chat window with high‑DPI scaling and custom icon.
+  - Left‑side panels for Server Settings, Sign‑In, and Chat Settings (each with drop‑shadow effects and animations).
+  - An extended avatar selection interface with dynamic avatar creation and page‑flipping animations.
+  - A chat log area (QListWidget), message input field, and attach button (with animations).
+  - Custom drop‑down overlays for the Chat Theme and Chat Recipient combo boxes.
+  - Full functions for connecting/disconnecting, signing in/out, sending/receiving messages, attaching images, etc.
+
+Usage:
+    python chat_client.py
+
+Author: Sabneet Bains
+License: MIT
+"""
+
 import sys
 import os
 import logging
@@ -12,46 +32,58 @@ logger = logging.getLogger(__name__)
 
 class ChatClient(QtWidgets.QDialog):
     """
-    Production-ready chat client with complete UI features and the option to use UDP or TCP.
+    ChatClient implements a production‑ready chat client with complete UI features.
     
-    Features:
-      - UDP/TCP socket initialization based on user selection.
-      - High-DPI scaling calculations.
-      - Main chat window with custom icon and centered geometry.
-      - Left-side menus for Server Settings, Sign-In, and Chat Settings (with shadow effects and animations).
-      - Extended avatar selection widget with dynamic avatar creation and page flipping.
-      - Chat log area, message field, and attach button (with animations).
-      - Custom drop-down overlays for Chat Theme and Chat Recipient combo boxes.
-      - All functions for connecting/disconnecting, signing in/out, sending/receiving messages, attaching images, etc.
+    Key features:
+      • Supports both UDP and TCP protocols.
+      • Automatically calculates high‑DPI scaling.
+      • Contains panels for Server Settings, Sign‑In, and Chat Settings, plus an avatar selection widget.
+      • Provides animations, custom drop‑down overlays, and comprehensive message handling.
     """
-
+    
     def __init__(self, parent: Optional[QtWidgets.QWidget] = None) -> None:
+        """
+        Initialize the chat client.
+        
+        This method creates the default socket (UDP by default), sets up scaling,
+        builds the entire UI, creates animations and overlays, connects signals,
+        and applies the default theme.
+        
+        Parameters:
+            parent (Optional[QtWidgets.QWidget]): Parent widget (default: None).
+        """
         super().__init__(parent)
         self.logger = logger
-
-        # Default to UDP; a socket instance will be re-created later if TCP is chosen.
+        
+        # Initialize with a UDP socket by default.
         self.socket = QtNetwork.QUdpSocket(self)
-
-        # Calculate scaling values
+        
+        # Calculate scaling parameters from the primary screen.
         self._setup_scaling()
-
-        # Build the complete UI (all widgets and layouts)
+        
+        # Build the complete user interface.
         self._setup_ui()
-
-        # Setup animations for menus/buttons (already created during UI setup)
+        
+        # Setup UI animations (created during widget instantiation).
         self._setup_animations()
-
-        # Setup custom drop-down overlays (widgets created in _setup_ui)
+        
+        # Setup custom overlays for the drop-down menus.
         self._setup_drop_down_overlays()
-
-        # Connect signals to slots
+        
+        # Connect signals to their corresponding slot functions.
         self._connect_signals()
-
-        # Apply the default theme
+        
+        # Apply the default theme.
         self.theme("Default")
-
+    
     def _setup_scaling(self) -> None:
-        """Calculate scaling parameters from the primary screen geometry."""
+        """
+        Calculate scaling parameters from the primary screen geometry.
+        
+        Sets:
+          - scaled_app_width, scaled_app_height: dimensions for the chat window.
+          - scaled_border_radius, scaled_font_size, scaled_underline_size: styling parameters.
+        """
         app = QtWidgets.QApplication.instance()
         screen_geom = app.primaryScreen().availableGeometry()
         self.scaled_app_width = int(screen_geom.width() / 3)
@@ -60,10 +92,21 @@ class ChatClient(QtWidgets.QDialog):
         self.scaled_font_size = str(int(screen_geom.height() / 100))
         self.scaled_underline_size = str(int(screen_geom.height() / 720))
         self.screen_geom = screen_geom
-
+    
     def _setup_ui(self) -> None:
-        """Set up the main window and all its child widgets."""
-        # Main Chat Window
+        """
+        Set up the main chat window and all child widgets.
+        
+        This method creates:
+          • The main window (with centered geometry and custom icon).
+          • Left‑side panels: Server Settings, Sign‑In, and Chat Settings.
+          • A protocol selector (UDP/TCP) within the Server Settings panel.
+          • All sub‑widgets (labels, buttons, input fields, combo boxes, etc.) for these panels.
+          • The chat log area, message input field, and attach button.
+          • The extended avatar selection widget.
+          • Custom drop‑down overlays for the chat settings combo boxes.
+        """
+        # --- Main Chat Window ---
         self.setObjectName("Chat_Window")
         self.setGeometry(
             int(self.screen_geom.width() / 2) - int(self.scaled_app_width / 2),
@@ -74,9 +117,9 @@ class ChatClient(QtWidgets.QDialog):
         self.setWindowTitle("  texte")
         icon_path = os.path.join(os.getcwd(), "icons", "texte_icon.svg")
         self.setWindowIcon(QtGui.QIcon(icon_path))
-
-        # --- Left Menu Bars ---
-        # Server Settings Menu (top left)
+        
+        # --- Left Panels ---
+        # Server Settings Panel (top left)
         self.server_settings_menu = QtWidgets.QFrame(self)
         self.server_settings_menu.setObjectName("Server_Settings_Menu")
         self.server_settings_menu.setGeometry(
@@ -99,8 +142,8 @@ class ChatClient(QtWidgets.QDialog):
         self.server_settings_menu_anim.setStartValue(self.server_settings_menu.pos())
         self.server_settings_menu_anim.setEndValue(QtCore.QPoint(0, 0))
         self.server_settings_menu_anim.setDuration(150)
-
-        # Sign-In Menu (middle left)
+        
+        # Sign-In Panel (middle left)
         self.sign_in_menu = QtWidgets.QFrame(self)
         self.sign_in_menu.setObjectName("Sign_In_Menu")
         self.sign_in_menu.setGeometry(
@@ -123,8 +166,8 @@ class ChatClient(QtWidgets.QDialog):
         self.sign_in_menu_anim.setStartValue(self.sign_in_menu.pos())
         self.sign_in_menu_anim.setEndValue(QtCore.QPoint(0, int(self.scaled_app_height / 3)))
         self.sign_in_menu_anim.setDuration(150)
-
-        # Chat Settings Menu (bottom left)
+        
+        # Chat Settings Panel (bottom left)
         self.chat_settings_menu = QtWidgets.QFrame(self)
         self.chat_settings_menu.setObjectName("Chat_Settings_Menu")
         self.chat_settings_menu.setGeometry(
@@ -149,8 +192,9 @@ class ChatClient(QtWidgets.QDialog):
             QtCore.QPoint(0, int(2 * self.scaled_app_height / 3))
         )
         self.chat_settings_menu_anim.setDuration(150)
-
-        # --- Server Settings Submenu Widgets ---
+        
+        # --- Server Settings Sub‑Widgets ---
+        # Server Settings Icon (toggle button)
         self.server_settings_icon = QtWidgets.QPushButton(self.server_settings_menu)
         self.server_settings_icon.setObjectName("Server_Settings_Icon")
         self.server_settings_icon.setGeometry(
@@ -178,7 +222,7 @@ class ChatClient(QtWidgets.QDialog):
             )
         )
         self.server_settings_icon.raise_()
-
+        
         self.server_settings_title = QtWidgets.QLabel(self.server_settings_menu)
         self.server_settings_title.setObjectName("Server_Settings_Title")
         self.server_settings_title.setGeometry(
@@ -188,7 +232,7 @@ class ChatClient(QtWidgets.QDialog):
             int(self.scaled_app_height / 34),
         )
         self.server_settings_title.setText("Server Settings")
-
+        
         self.host_title = QtWidgets.QLabel(self.server_settings_menu)
         self.host_title.setObjectName("Host_Title")
         self.host_title.setGeometry(
@@ -198,7 +242,7 @@ class ChatClient(QtWidgets.QDialog):
             int(self.scaled_app_height / 34),
         )
         self.host_title.setText("Hostname")
-
+        
         self.host_address = QtWidgets.QLineEdit(self.server_settings_menu)
         self.host_address.setObjectName("Host_Address")
         self.host_address.setGeometry(
@@ -208,7 +252,7 @@ class ChatClient(QtWidgets.QDialog):
             int(self.scaled_app_height / 33),
         )
         self.host_address.setText("127.0.0.1")
-
+        
         self.port_title = QtWidgets.QLabel(self.server_settings_menu)
         self.port_title.setObjectName("Port_Title")
         self.port_title.setGeometry(
@@ -218,7 +262,7 @@ class ChatClient(QtWidgets.QDialog):
             int(self.scaled_app_height / 34),
         )
         self.port_title.setText("Port #")
-
+        
         self.port_number = QtWidgets.QLineEdit(self.server_settings_menu)
         self.port_number.setObjectName("Port_Number")
         self.port_number.setGeometry(
@@ -228,11 +272,10 @@ class ChatClient(QtWidgets.QDialog):
             int(self.scaled_app_height / 33),
         )
         self.port_number.setText("33002")
-
-        # --- New: Protocol Selector (UDP/TCP) ---
+        
+        # Protocol Selector: Choose UDP or TCP
         self.protocol_selector = QtWidgets.QComboBox(self.server_settings_menu)
         self.protocol_selector.setObjectName("Protocol_Selector")
-        # Position it below the port number (adjust as needed)
         self.protocol_selector.setGeometry(
             int(self.scaled_app_width / 13.2),
             int(self.scaled_app_height / 3.0),
@@ -240,7 +283,7 @@ class ChatClient(QtWidgets.QDialog):
             int(self.scaled_app_height / 33),
         )
         self.protocol_selector.addItems(["UDP", "TCP"])
-
+        
         self.server_button = QtWidgets.QPushButton(self.server_settings_menu)
         self.server_button.setObjectName("Server_Button")
         self.server_button.setGeometry(
@@ -267,7 +310,7 @@ class ChatClient(QtWidgets.QDialog):
                 yOffset=int(self.scaled_app_height / 350),
             )
         )
-
+        
         self.server_connection_status = QtWidgets.QLabel(self.server_settings_menu)
         self.server_connection_status.setObjectName("Server_Connection_Status")
         self.server_connection_status.setGeometry(
@@ -279,8 +322,8 @@ class ChatClient(QtWidgets.QDialog):
         self.server_connection_status.setText(
             "<html><head/><body><center>NOT CONNECTED</center></body></html>"
         )
-
-        # --- Sign-In Menu Widgets ---
+        
+        # --- Sign-In Panel Widgets ---
         self.user_avatar = QtWidgets.QPushButton(self.sign_in_menu)
         self.user_avatar.setObjectName("user1")
         self.user_avatar.setGeometry(
@@ -309,7 +352,7 @@ class ChatClient(QtWidgets.QDialog):
         )
         self.user_avatar.setVisible(False)
         self.user_avatar.raise_()
-
+        
         self.temporary_avatar = QtWidgets.QPushButton(self.sign_in_menu)
         self.temporary_avatar.setObjectName("Temporary_Avatar")
         self.temporary_avatar.setGeometry(
@@ -335,7 +378,7 @@ class ChatClient(QtWidgets.QDialog):
                 yOffset=int(self.scaled_app_height / 350),
             )
         )
-
+        
         self.sign_in_title = QtWidgets.QLabel(self.sign_in_menu)
         self.sign_in_title.setObjectName("Sign_In_Title")
         self.sign_in_title.setGeometry(
@@ -345,7 +388,7 @@ class ChatClient(QtWidgets.QDialog):
             int(self.scaled_app_height / 34),
         )
         self.sign_in_title.setText("Sign-in")
-
+        
         self.username_title = QtWidgets.QLabel(self.sign_in_menu)
         self.username_title.setObjectName("Username_Title")
         self.username_title.setGeometry(
@@ -355,7 +398,7 @@ class ChatClient(QtWidgets.QDialog):
             int(self.scaled_app_height / 34),
         )
         self.username_title.setText("Username")
-
+        
         self.username = QtWidgets.QLineEdit(self.sign_in_menu)
         self.username.setObjectName("Username")
         self.username.setGeometry(
@@ -366,7 +409,7 @@ class ChatClient(QtWidgets.QDialog):
         )
         self.username.setText("Hugo")
         self.username.setEnabled(False)
-
+        
         self.password_title = QtWidgets.QLabel(self.sign_in_menu)
         self.password_title.setObjectName("Password_Title")
         self.password_title.setGeometry(
@@ -376,7 +419,7 @@ class ChatClient(QtWidgets.QDialog):
             int(self.scaled_app_height / 34),
         )
         self.password_title.setText("Password")
-
+        
         self.password = QtWidgets.QLineEdit(self.sign_in_menu)
         self.password.setObjectName("Password")
         self.password.setGeometry(
@@ -387,7 +430,7 @@ class ChatClient(QtWidgets.QDialog):
         )
         self.password.setText("********")
         self.password.setEnabled(False)
-
+        
         self.sign_in_button = QtWidgets.QPushButton(self.sign_in_menu)
         self.sign_in_button.setObjectName("Sign_In_Button")
         self.sign_in_button.setGeometry(
@@ -415,7 +458,7 @@ class ChatClient(QtWidgets.QDialog):
                 yOffset=int(self.scaled_app_height / 350),
             )
         )
-
+        
         self.user_connection_status = QtWidgets.QLabel(self.sign_in_menu)
         self.user_connection_status.setObjectName("User_Connection_Status")
         self.user_connection_status.setGeometry(
@@ -427,7 +470,7 @@ class ChatClient(QtWidgets.QDialog):
         self.user_connection_status.setText(
             "<html><head/><body><center>SIGNED-OUT       </center></body></html>"
         )
-
+        
         # --- Extended Avatar Selection GUI ---
         self.avatar_selector_widget = QtWidgets.QStackedWidget(self)
         self.avatar_selector_widget.setGeometry(
@@ -454,7 +497,7 @@ class ChatClient(QtWidgets.QDialog):
             QtCore.QPoint(int(self.scaled_app_width / 14.7), int(self.scaled_app_height / 2.78))
         )
         self.avatar_selector_open_anim.setDuration(20)
-
+        
         self.avatar_selector_close_anim = QtCore.QPropertyAnimation(
             self.avatar_selector_widget, b"pos"
         )
@@ -463,7 +506,7 @@ class ChatClient(QtWidgets.QDialog):
             QtCore.QPoint(int(self.scaled_app_width / 25), int(self.scaled_app_height / 2.78))
         )
         self.avatar_selector_close_anim.setDuration(25)
-
+        
         self.avatar_selector_page1 = QtWidgets.QWidget()
         self.avatar_selector_page1.setObjectName("Avatar_Selector_Page_1")
         self.avatar_selector_page2 = QtWidgets.QWidget()
@@ -474,240 +517,8 @@ class ChatClient(QtWidgets.QDialog):
         self.avatar_selector_widget.addWidget(self.avatar_selector_page2)
         self.avatar_selector_widget.addWidget(self.avatar_selector_page3)
         self.avatar_selector_widget.setCurrentIndex(0)
-
-        # --- Functions for Avatar Selection ---
-        def select_avatar() -> None:
-            """Allows selection of an avatar through the avatar selection window."""
-            selected_avatar = self.sender()
-            self.user_avatar.setIcon(
-                QtGui.QIcon(os.path.join(os.getcwd(), "avatars", f"{selected_avatar.objectName()}.svg"))
-            )
-            self.temporary_avatar.setIcon(
-                QtGui.QIcon(os.path.join(os.getcwd(), "avatars", f"{selected_avatar.objectName()}.svg"))
-            )
-            self.user_avatar.setObjectName(selected_avatar.objectName())
-            self.user_avatar.toggle()
-            self.avatar_selector_close_anim.start()
-            if self.avatar_selector_widget.x() == int(self.scaled_app_width / 25):
-                self.avatar_selector_widget.setVisible(False)
-
-        def open_avatar_selector() -> None:
-            """Opens or closes the avatar selection window."""
-            if self.user_avatar.isChecked():
-                self.avatar_selector_widget.setVisible(True)
-                self.avatar_selector_open_anim.start()
-            else:
-                self.avatar_selector_close_anim.start()
-                if self.avatar_selector_widget.x() == int(self.scaled_app_width / 25):
-                    self.avatar_selector_widget.setVisible(False)
-
-        def scroll_avatar_selector() -> None:
-            """Allows flipping of pages in the avatar selection window."""
-            current_index = self.avatar_selector_widget.currentIndex()
-            next_index = current_index + 1 if current_index < 2 else 0
-            self.avatar_selector_widget.setCurrentIndex(next_index)
-
-        j_vals = [0, 1, 2, 3] * 9
-        for i in range(36):
-            if i < 4:
-                page = self.avatar_selector_page1
-                x = int(self.avatar_selector_widget.width() / 25) + (j_vals[i] * int(self.avatar_selector_widget.width() / 4.166))
-                y = int(self.avatar_selector_widget.height() / 14.5)
-            elif i < 8:
-                page = self.avatar_selector_page1
-                x = int(self.avatar_selector_widget.width() / 25) + (j_vals[i] * int(self.avatar_selector_widget.width() / 4.166))
-                y = int(self.avatar_selector_widget.height() / 2.9)
-            elif i < 12:
-                page = self.avatar_selector_page1
-                x = int(self.avatar_selector_widget.width() / 25) + (j_vals[i] * int(self.avatar_selector_widget.width() / 4.166))
-                y = int(self.avatar_selector_widget.height() / 1.611)
-            elif i < 16:
-                page = self.avatar_selector_page2
-                x = int(self.avatar_selector_widget.width() / 25) + (j_vals[i] * int(self.avatar_selector_widget.width() / 4.166))
-                y = int(self.avatar_selector_widget.height() / 14.5)
-            elif i < 20:
-                page = self.avatar_selector_page2
-                x = int(self.avatar_selector_widget.width() / 25) + (j_vals[i] * int(self.avatar_selector_widget.width() / 4.166))
-                y = int(self.avatar_selector_widget.height() / 2.9)
-            elif i < 24:
-                page = self.avatar_selector_page2
-                x = int(self.avatar_selector_widget.width() / 25) + (j_vals[i] * int(self.avatar_selector_widget.width() / 4.166))
-                y = int(self.avatar_selector_widget.height() / 1.611)
-            elif i < 28:
-                page = self.avatar_selector_page3
-                x = int(self.avatar_selector_widget.width() / 25) + (j_vals[i] * int(self.avatar_selector_widget.width() / 4.166))
-                y = int(self.avatar_selector_widget.height() / 14.5)
-            elif i < 32:
-                page = self.avatar_selector_page3
-                x = int(self.avatar_selector_widget.width() / 25) + (j_vals[i] * int(self.avatar_selector_widget.width() / 4.166))
-                y = int(self.avatar_selector_widget.height() / 2.9)
-            else:
-                page = self.avatar_selector_page3
-                x = int(self.avatar_selector_widget.width() / 25) + (j_vals[i] * int(self.avatar_selector_widget.width() / 4.166))
-                y = int(self.avatar_selector_widget.height() / 1.611)
-            user_btn = QtWidgets.QPushButton(page)
-            user_btn.setObjectName(f"User{str(i + 1)}")
-            user_btn.setGeometry(x, y,
-                                 int(self.avatar_selector_widget.width() / 5),
-                                 int(self.avatar_selector_widget.height() / 5.9))
-            user_btn.setStyleSheet("background: transparent; border: none;")
-            user_icon_path = os.path.join(os.getcwd(), "avatars", f"User{str(i + 1)}.svg")
-            user_btn.setIcon(QtGui.QIcon(user_icon_path))
-            user_btn.setIconSize(QtCore.QSize(
-                int(self.avatar_selector_widget.width() / 5),
-                int(self.avatar_selector_widget.height() / 5.9)
-            ))
-            user_btn.setGraphicsEffect(
-                QtWidgets.QGraphicsDropShadowEffect(
-                    color=QtGui.QColor(0, 0, 0, 100),
-                    blurRadius=30,
-                    xOffset=int(self.scaled_app_width / 350),
-                    yOffset=int(self.scaled_app_height / 350)
-                )
-            )
-            user_btn.clicked.connect(select_avatar)
-            if i in [8, 20, 32]:
-                next_btn = QtWidgets.QPushButton(page)
-                next_btn.setObjectName("Avatar_Selector_Next_Button")
-                next_btn.setGeometry(
-                    int(self.avatar_selector_widget.width() / 1.29),
-                    int(self.avatar_selector_widget.height() / 1.23),
-                    int(self.avatar_selector_widget.width() / 5),
-                    int(self.avatar_selector_widget.height() / 5.9)
-                )
-                next_btn.setStyleSheet("background: transparent; border: none;")
-                next_icon = os.path.join(os.getcwd(), "icons", "next_icon.svg")
-                next_btn.setIcon(QtGui.QIcon(next_icon))
-                next_btn.setIconSize(QtCore.QSize(
-                    int(self.avatar_selector_widget.width() / 6.25),
-                    int(self.avatar_selector_widget.height() / 14.75)
-                ))
-                next_btn.setGraphicsEffect(
-                    QtWidgets.QGraphicsDropShadowEffect(
-                        color=QtGui.QColor(0, 0, 0, 100),
-                        blurRadius=10,
-                        xOffset=int(self.scaled_app_width / 300),
-                        yOffset=int(self.scaled_app_height / 350)
-                    )
-                )
-                next_btn.clicked.connect(scroll_avatar_selector)
-
-        # --- Chat Settings Menu Widgets ---
-        self.chat_settings_icon = QtWidgets.QPushButton(self.chat_settings_menu)
-        self.chat_settings_icon.setObjectName("Chat_Settings_Icon")
-        self.chat_settings_icon.setGeometry(
-            int(self.scaled_app_width / 65),
-            int(self.scaled_app_height / 60),
-            int(self.scaled_app_width / 23),
-            int(self.scaled_app_height / 17)
-        )
-        self.chat_settings_icon.setStyleSheet("background: transparent; border: none;")
-        self.chat_settings_icon.setIcon(
-            QtGui.QIcon(os.path.join(os.getcwd(), "icons", "chat_icon.svg"))
-        )
-        self.chat_settings_icon.setIconSize(
-            QtCore.QSize(
-                int(self.scaled_app_width / 23),
-                int(self.scaled_app_height / 19)
-            )
-        )
-        self.chat_settings_icon.setCheckable(True)
-        self.chat_settings_icon.setGraphicsEffect(
-            QtWidgets.QGraphicsDropShadowEffect(
-                color=QtGui.QColor(0, 0, 0, 100),
-                blurRadius=30,
-                xOffset=int(self.scaled_app_width / 350),
-                yOffset=int(self.scaled_app_height / 350)
-            )
-        )
-        self.chat_settings_icon.raise_()
-
-        self.chat_settings_title = QtWidgets.QLabel(self.chat_settings_menu)
-        self.chat_settings_title.setObjectName("Chat_Settings_Title")
-        self.chat_settings_title.setGeometry(
-            int(self.scaled_app_width / 13.2),
-            int(self.scaled_app_height / 33),
-            int(self.scaled_app_width / 5),
-            int(self.scaled_app_height / 34)
-        )
-        self.chat_settings_title.setText("Chat Settings")
-
-        self.chat_theme_title = QtWidgets.QLabel(self.chat_settings_menu)
-        self.chat_theme_title.setObjectName("Chat_Theme_Title")
-        self.chat_theme_title.setGeometry(
-            int(self.scaled_app_width / 12.8),
-            int(self.scaled_app_height / 11.2),
-            int(self.scaled_app_width / 5),
-            int(self.scaled_app_height / 34)
-        )
-        self.chat_theme_title.setText("Theme")
-
-        self.chat_theme = QtWidgets.QComboBox(self.chat_settings_menu)
-        self.chat_theme.setObjectName("Chat_Theme")
-        self.chat_theme.setGeometry(
-            int(self.scaled_app_width / 13.2),
-            int(self.scaled_app_height / 7.7),
-            int(self.scaled_app_width / 11.6),
-            int(self.scaled_app_height / 33)
-        )
-        self.chat_theme.addItems(["Default", "Blue", "Dark", "Light"])
-        self.chat_theme.setEnabled(False)
-        self.chat_theme.currentIndexChanged.connect(
-            lambda: self.theme(self.chat_theme.currentText())
-        )
-
-        self.chat_selector_title = QtWidgets.QLabel(self.chat_settings_menu)
-        self.chat_selector_title.setObjectName("Chat_Selector_Title")
-        self.chat_selector_title.setGeometry(
-            int(self.scaled_app_width / 12.8),
-            int(self.scaled_app_height / 5),
-            int(self.scaled_app_width / 5),
-            int(self.scaled_app_height / 34)
-        )
-        self.chat_selector_title.setText("Recipient")
-
-        self.chat_selector = QtWidgets.QComboBox(self.chat_settings_menu)
-        self.chat_selector.setObjectName("Chat_Selector")
-        self.chat_selector.setGeometry(
-            int(self.scaled_app_width / 13),
-            int(self.scaled_app_height / 4.15),
-            int(self.scaled_app_width / 11.6),
-            int(self.scaled_app_height / 33)
-        )
-        self.chat_selector.addItem("ALL")
-        self.chat_selector.setEnabled(False)
-
-        self.chat_confirm_button = QtWidgets.QPushButton(self.chat_settings_menu)
-        self.chat_confirm_button.setObjectName("Chat_Confirm_Button")
-        self.chat_confirm_button.setGeometry(
-            int(self.scaled_app_width / 4.7),
-            int(self.scaled_app_height / 4.4),
-            int(self.scaled_app_width / 25),
-            int(self.scaled_app_height / 20)
-        )
-        self.chat_confirm_button.setStyleSheet("background: transparent; border: none;")
-        self.chat_confirm_button.setIcon(
-            QtGui.QIcon(os.path.join(os.getcwd(), "icons", "check_icon.svg"))
-        )
-        self.chat_confirm_button.setIconSize(
-            QtCore.QSize(
-                int(self.scaled_app_width / 21),
-                int(self.scaled_app_height / 18)
-            )
-        )
-        self.chat_confirm_button.setEnabled(False)
-        self.chat_confirm_button.setCheckable(True)
-        self.chat_confirm_button.setGraphicsEffect(
-            QtWidgets.QGraphicsDropShadowEffect(
-                color=QtGui.QColor(0, 0, 0, 100),
-                blurRadius=30,
-                xOffset=int(self.scaled_app_width / 300),
-                yOffset=int(self.scaled_app_height / 350)
-            )
-        )
-
-        # --- Overlays for OS Drop-down Customization ---
-        # Chat Theme Drop-down Overlay
+        
+        # --- Custom Drop-Down Overlays for Chat Settings ---
         self.chat_theme_dropdown_bg = QtWidgets.QLabel(self.chat_theme)
         self.chat_theme_dropdown_bg.setObjectName("Chat_Theme_Drop_Down_Background")
         self.chat_theme_dropdown_bg.setGeometry(
@@ -733,8 +544,7 @@ class ChatClient(QtWidgets.QDialog):
             )
         )
         self.chat_theme_dropdown_btn.setVisible(False)
-
-        # Chat Selector Drop-down Overlay
+        
         self.chat_selector_dropdown_bg = QtWidgets.QLabel(self.chat_selector)
         self.chat_selector_dropdown_bg.setObjectName("Chat_Selector_Drop_Down_Background")
         self.chat_selector_dropdown_bg.setGeometry(
@@ -760,7 +570,7 @@ class ChatClient(QtWidgets.QDialog):
             )
         )
         self.chat_selector_dropdown_btn.setVisible(False)
-
+        
         # --- Chat Log Area ---
         self.chat_log = QtWidgets.QListWidget(self)
         self.chat_log.setGeometry(
@@ -771,7 +581,7 @@ class ChatClient(QtWidgets.QDialog):
         )
         self.chat_log.setObjectName("Chat_Log")
         self.chat_log.setEnabled(False)
-
+        
         # --- Message Field and Attach Button ---
         self.message_field = QtWidgets.QLineEdit(self)
         self.message_field.setObjectName("Message_Field")
@@ -791,14 +601,14 @@ class ChatClient(QtWidgets.QDialog):
             )
         )
         self.message_field.setEnabled(False)
-
+        
         self.message_field_anim = QtCore.QPropertyAnimation(self.message_field, b"pos")
         self.message_field_anim.setStartValue(self.message_field.pos())
         self.message_field_anim.setEndValue(
             QtCore.QPoint(int(self.scaled_app_width / 3.2), int(self.scaled_app_height / 1.1))
         )
         self.message_field_anim.setDuration(150)
-
+        
         self.attach_button = QtWidgets.QPushButton(self)
         self.attach_button.setObjectName("Attach_Button")
         self.attach_button.setGeometry(
@@ -818,27 +628,35 @@ class ChatClient(QtWidgets.QDialog):
             )
         )
         self.attach_button.setEnabled(False)
-
+        
         self.attach_button_anim = QtCore.QPropertyAnimation(self.attach_button, b"pos")
         self.attach_button_anim.setStartValue(self.attach_button.pos())
         self.attach_button_anim.setEndValue(
             QtCore.QPoint(int(self.scaled_app_width / 1.075), int(self.scaled_app_height / 1.1))
         )
         self.attach_button_anim.setDuration(150)
-
+    
     def _setup_animations(self) -> None:
-        """Additional animations were set up during widget creation."""
+        """Additional animations have been set up during widget creation."""
         pass
-
+    
     def _setup_drop_down_overlays(self) -> None:
         """
-        (The custom overlays for the Chat Theme and Chat Selector drop-downs are created in _setup_ui.
-         This method exists to indicate that these widgets must be created after their parent widgets.)
+        Setup the custom overlays for Chat Theme and Chat Selector drop-downs.
+        
+        These overlays are created as child widgets of the combo boxes and are intended
+        to appear above the OS-provided drop-down menus.
         """
+        # (In this implementation, the overlay widgets are created in _setup_ui.)
         pass
-
+    
     def _connect_signals(self) -> None:
-        """Connect widget signals to their respective slot functions."""
+        """
+        Connect signals to their respective slot functions.
+        
+        This method connects socket signals (for message reception) and UI events
+        (button clicks, returnPressed on the message field, etc.) to their handlers.
+        """
         self.socket.readyRead.connect(self.receive_message)
         self.server_button.clicked.connect(self.connect_client)
         self.user_avatar.clicked.connect(lambda: self.open_avatar_selector())
@@ -852,9 +670,15 @@ class ChatClient(QtWidgets.QDialog):
             )
         )
         self.attach_button.clicked.connect(self.attach_picture)
-
+    
     def theme(self, theme_name: str) -> None:
-        """Apply a theme based on the user selection."""
+        """
+        Apply a visual theme based on the user selection.
+        
+        Supported themes:
+            "Default", "Blue", "Dark", "Light"
+        Adjusts colors for backgrounds, text, borders, and other UI elements.
+        """
         if theme_name == "Default":
             Main_Background_Color = "#28284E"
             Main_Title_Color = "#A599E9"
@@ -910,7 +734,8 @@ class ChatClient(QtWidgets.QDialog):
         else:
             self.logger.error(f"Unknown theme: {theme_name}")
             return
-
+        
+        # Apply styles to Server Settings panel
         self.server_settings_menu.setStyleSheet(f"background: {Main_Background_Color}")
         self.server_settings_title.setStyleSheet(f"color: {Main_Title_Color}; font: {self.scaled_font_size}px;")
         self.host_title.setStyleSheet(f"color: {Main_Title_Color}; font: {self.scaled_font_size}px;")
@@ -929,6 +754,7 @@ class ChatClient(QtWidgets.QDialog):
             self.server_connection_status.setStyleSheet(
                 f"color: {Main_Status_Banner_Connected_Color}; background: transparent; border-bottom: 2px solid {Main_Status_Banner_Shadow_Color}; font: {self.scaled_font_size}px;"
             )
+        # Apply styles to Sign-In panel
         self.sign_in_menu.setStyleSheet(f"background: {Main_Background_Color}")
         self.sign_in_title.setStyleSheet(f"color: {Main_Title_Color}; font: {self.scaled_font_size}px;")
         self.username_title.setStyleSheet(f"color: {Main_Title_Color}; font: {self.scaled_font_size}px;")
@@ -947,6 +773,7 @@ class ChatClient(QtWidgets.QDialog):
             self.user_connection_status.setStyleSheet(
                 f"color: {Main_Status_Banner_Connected_Color}; background: transparent; border-bottom: 2px solid {Main_Status_Banner_Shadow_Color}; font: {self.scaled_font_size}px;"
             )
+        # Apply styles to Chat Settings panel
         self.chat_settings_menu.setStyleSheet(f"background: {Main_Background_Color}")
         self.chat_settings_title.setStyleSheet(f"color: {Main_Title_Color}; font: {self.scaled_font_size}px;")
         self.chat_theme_title.setStyleSheet(f"color: {Main_Title_Color}; font: {self.scaled_font_size}px;")
@@ -966,14 +793,20 @@ class ChatClient(QtWidgets.QDialog):
         self.message_field.setStyleSheet(
             f"border: none; color: {Main_Message_Field_Text_Color}; background-color: {Main_Message_Field_Background_Color}; border-radius: {self.scaled_border_radius}px; padding: 0 15px; font: {self.scaled_font_size}px;"
         )
-
+    
     def connect_client(self) -> None:
         """
-        Connects to the server using the provided hostname and port.
-        Also checks the Protocol selector to use UDP or TCP.
+        Connects to the server using the provided hostname, port, and selected protocol.
+        
+        If the server button is toggled on, this function:
+          - Recreates the socket if the protocol (UDP/TCP) has changed.
+          - Connects to the host and port.
+          - Sends a "{CONNECT}" message.
+          - Updates UI elements accordingly.
+        If toggled off, it sends a "{DISCONNECT}" message and resets UI elements.
         """
-        # Adjust socket type if needed based on protocol selection.
         protocol = self.protocol_selector.currentText()
+        # Re-create the socket if needed.
         if protocol == "TCP":
             if not isinstance(self.socket, QtNetwork.QTcpSocket):
                 self.socket.deleteLater()
@@ -982,7 +815,7 @@ class ChatClient(QtWidgets.QDialog):
             if not isinstance(self.socket, QtNetwork.QUdpSocket):
                 self.socket.deleteLater()
                 self.socket = QtNetwork.QUdpSocket(self)
-
+    
         if self.server_button.isChecked():
             host = self.host_address.text()
             try:
@@ -1022,9 +855,15 @@ class ChatClient(QtWidgets.QDialog):
             self.username.setEnabled(False)
             self.sign_in_button.setEnabled(False)
             self.message_field.setText("Dissconnected! Good Bye...")
-
+    
     def sign_in(self) -> None:
-        """Registers or unregisters the username with the server."""
+        """
+        Registers or unregisters the username with the server.
+        
+        When the sign-in button is toggled on, a "{REGISTER}" message is sent,
+        UI elements are updated for a signed-in state, and chat widgets are enabled.
+        When toggled off, a "{UNREGISTER}" message is sent and the UI reverts to signed-out.
+        """
         if self.sign_in_button.isChecked():
             self.send_message("{REGISTER}")
             self.server_button.setEnabled(False)
@@ -1066,11 +905,18 @@ class ChatClient(QtWidgets.QDialog):
             self.chat_confirm_button.setEnabled(False)
             self.message_field.setText("Signed Out!...") 
             self.chat_log.setEnabled(False)
-
+    
     def send_message(self, message: str, host: str = "127.0.0.1", port: int = 33002) -> None:
         """
-        Sends a message using the chosen protocol.
+        Sends a message via the selected protocol.
+        
         For UDP, uses writeDatagram; for TCP, uses write.
+        If the message starts with "{FIELD}", it is sent and the input field is cleared.
+        
+        Parameters:
+            message (str): The message to send.
+            host (str): Destination host (default "127.0.0.1").
+            port (int): Destination port (default 33002).
         """
         protocol = self.protocol_selector.currentText()
         if protocol == "UDP":
@@ -1089,11 +935,14 @@ class ChatClient(QtWidgets.QDialog):
                 self.message_field.setFocus()
             else:
                 self.socket.write(message.encode())
-
+    
     def receive_message(self) -> None:
         """
-        Receives messages using the chosen protocol.
-        For UDP, reads datagrams; for TCP, reads available bytes.
+        Receives messages using the selected protocol.
+        
+        In UDP mode, reads and processes all pending datagrams.
+        In TCP mode, reads all available bytes.
+        If a message starts with "{MSG}", it is displayed in the chat log.
         """
         protocol = self.protocol_selector.currentText()
         if protocol == "UDP":
@@ -1109,21 +958,25 @@ class ChatClient(QtWidgets.QDialog):
                 if data.startswith("{MSG}"):
                     data = data.replace("{MSG}", "")
                     self.chat_log.addItem(data)
-
+    
     def better_drop_down(self, whom: int) -> None:
         """
         Mimics a cleaner drop-down behavior.
-        whom == 0 for Chat Theme; whom == 1 for Chat Selector.
+        
+        Parameters:
+            whom (int): 0 for Chat Theme; 1 for Chat Selector.
         """
         if whom == 0:
             self.chat_theme_dropdown_btn.parent().showPopup()
         elif whom == 1:
             self.chat_selector_dropdown_btn.parent().showPopup()
-
+    
     def chat_target(self) -> None:
         """
         Handles chat recipient confirmation.
-        Enables message field and disables selection widgets if confirmed.
+        
+        When confirmed (button toggled on), it disables selection widgets and enables
+        the message field for user input. When toggled off, it reverses these changes.
         """
         if self.chat_confirm_button.isChecked():
             self.chat_confirm_button.setIcon(
@@ -1152,9 +1005,14 @@ class ChatClient(QtWidgets.QDialog):
             self.message_field.setText("Select a User to start chatting...")
             self.chat_log.setEnabled(False)
             self.attach_button.setEnabled(False)
-
+    
     def attach_picture(self) -> None:
-        """Opens a file dialog to attach an image to the chat log."""
+        """
+        Opens a file dialog to allow the user to attach an image.
+        
+        If an image is selected, a new list item with the image icon is added
+        to the chat log.
+        """
         image_tuple = QtWidgets.QFileDialog.getOpenFileName(
             self, 'Attach an Image', os.getcwd(), "Image files (*.jpg *.png *.gif *.svg)"
         )
@@ -1165,9 +1023,14 @@ class ChatClient(QtWidgets.QDialog):
                 QtCore.QSize(int(self.scaled_app_width / 20), int(self.scaled_app_height / 17))
             )
             self.chat_log.addItem(attached_item)
-
+    
     def _connect_signals(self) -> None:
-        """Connect signals to their corresponding slot functions."""
+        """
+        Connects all relevant signals to their respective slot functions.
+        
+        This includes signals from the network socket and UI widgets (such as button clicks
+        and text entry).
+        """
         self.socket.readyRead.connect(self.receive_message)
         self.server_button.clicked.connect(self.connect_client)
         self.user_avatar.clicked.connect(lambda: self.open_avatar_selector())
@@ -1181,9 +1044,11 @@ class ChatClient(QtWidgets.QDialog):
             )
         )
         self.attach_button.clicked.connect(self.attach_picture)
-
+    
     def open_avatar_selector(self) -> None:
-        """Opens or closes the avatar selection widget based on the toggle state."""
+        """
+        Toggles the avatar selection widget based on the user_avatar toggle state.
+        """
         if self.user_avatar.isChecked():
             self.avatar_selector_widget.setVisible(True)
             self.avatar_selector_open_anim.start()
@@ -1192,12 +1057,18 @@ class ChatClient(QtWidgets.QDialog):
             if self.avatar_selector_widget.x() == int(self.scaled_app_width / 25):
                 self.avatar_selector_widget.setVisible(False)
 
+
 def main() -> None:
-    """Entry point for the chat client application."""
+    """
+    Entry point for the chat client application.
+    
+    Creates the QApplication, instantiates the ChatClient, starts necessary animations,
+    connects signals, and runs the event loop.
+    """
     app = QtWidgets.QApplication(sys.argv)
     client = ChatClient()
     client.show()
-    # Start animations for menus/buttons
+    # Start animations for panels and buttons
     client.server_settings_menu_anim.start()
     client.sign_in_menu_anim.start()
     client.chat_settings_menu_anim.start()
@@ -1205,6 +1076,7 @@ def main() -> None:
     client.attach_button_anim.start()
     client._connect_signals()  # Connect all signals
     sys.exit(app.exec())
+
 
 if __name__ == "__main__":
     main()
