@@ -162,7 +162,7 @@ Contributions are welcome! Please follow these guidelines:
 
 ## License
 
-This project is licensed under the [MIT License](https://choosealicense.com/licenses/mit/).
+This project is licensed under the [MIT License](https://github.com/sabneet95/Texte-Messenger/blob/master/LICENSE).
 
 ---
 
