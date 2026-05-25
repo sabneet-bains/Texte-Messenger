@@ -16,46 +16,54 @@
 
 </div>
 
+<br>
+
 > [!IMPORTANT]
 > Texte is a local messenger prototype. It is not a secure messenger, not a
 > production chat service, and not a cloud platform.
 
-## Navigation
+<br>
+
+## 🧭 Navigation
 
 | Goal | Start here | What you will see |
-| --- | --- | --- |
-| Understand the project | [Project Highlights](#project-highlights) | Core capabilities and evidence in one minute |
-| Run it quickly | [Try It in 30 Seconds](#try-it-in-30-seconds) | Copy-paste demo commands with real output |
-| Inspect the design | [Architecture & Design](#architecture--design) | Package layout, data flow, tradeoffs, and limits |
-| Verify behavior | [Testing & Verification](#testing--verification) | Tests, demos, lint, compile, and build commands |
+|:--|:--|:--|
+| **Understand the project** | [Project Highlights](#project-highlights) | Core capabilities and evidence in one minute |
+| **Run it quickly** | [Try It in 30 Seconds](#try-it-in-30-seconds) | Copy-paste demo commands with real output |
+| **Inspect the design** | [Architecture & Design](#architecture--design) | Package layout, data flow, tradeoffs, and limits |
+| **Verify behavior** | [Testing & Verification](#testing--verification) | Tests, demos, lint, compile, and build commands |
 
-## Project Highlights
+<br>
+
+## 🏆 Project Highlights
 
 Texte turns a desktop chat mockup into a real, inspectable local messenger.
 
 | Signal | Evidence in this repo |
-| --- | --- |
-| Desktop UI | PyQt6 client with a Messages-style shell, setup sheet, Light/Dark themes, message bubbles, and attachment controls |
-| Networking | Local UDP and TCP servers using `PyQt6.QtNetwork` |
-| Protocol design | Small command-prefixed protocol with explicit TCP framing |
-| Routing | Shared `ChatRoom` core for registration, presence, public messages, direct messages, and disconnect cleanup |
-| Attachments | Small TCP-only file payloads with size checks and local saving |
-| Engineering rigor | Scripted demos, expected transcripts, tests, docs, package metadata, and CI |
+|:--|:--|
+| **Desktop UI** | PyQt6 client with a Messages-style shell, setup sheet, Light/Dark themes, message bubbles, and attachment controls |
+| **Networking** | Local UDP and TCP servers using `PyQt6.QtNetwork` |
+| **Protocol design** | Small command-prefixed protocol with explicit TCP framing |
+| **Routing** | Shared `ChatRoom` core for registration, presence, public messages, direct messages, and disconnect cleanup |
+| **Attachments** | Small TCP-only file payloads with size checks and local saving |
+| **Engineering rigor** | Scripted demos, expected transcripts, tests, docs, package metadata, and CI |
 
 ### Project Snapshot
 
 | Metric | Current Value |
-| --- | --- |
-| Package | `texte` |
-| Desktop toolkit | PyQt6 |
-| Server modes | UDP and TCP |
-| Client commands | `{CONNECT}`, `{DISCONNECT}`, `{REGISTER}`, `{UNREGISTER}`, `{ALL}`, `{TO}`, `{FILE}` |
-| Server messages | `{MSG}`, `{USERS}`, `{ERROR}`, `{FILE}` |
-| Scripted demos | TCP and UDP two-client demos |
-| Collected tests | 51 |
-| CI | Ruff, mypy, format check, compile, pytest, demo smoke checks, package build |
+|:--|:--|
+| **Package** | `texte` |
+| **Desktop toolkit** | PyQt6 |
+| **Server modes** | UDP and TCP |
+| **Client commands** | `{CONNECT}`, `{DISCONNECT}`, `{REGISTER}`, `{UNREGISTER}`, `{ALL}`, `{TO}`, `{FILE}` |
+| **Server messages** | `{MSG}`, `{USERS}`, `{ERROR}`, `{FILE}` |
+| **Scripted demos** | TCP and UDP two-client demos |
+| **Collected tests** | 51 |
+| **CI** | Ruff, mypy, format check, compile, pytest, demo smoke checks, package build |
 
-## Try It in 30 Seconds
+<br>
+
+## ⚡ Try It in 30 Seconds
 
 Install and run the test suite:
 
@@ -99,7 +107,9 @@ Bob received direct message: [09:52] Alice -> Bob: private ping
 UDP demo skipped file transfer; attachments are TCP-only.
 ```
 
-## Run The Desktop App
+<br>
+
+## 🖥️ Open The Desktop App
 
 Start the desktop client:
 
@@ -150,7 +160,17 @@ TCP mode.
 
 </details>
 
-## Architecture & Design
+<br>
+
+<div align="right">
+
+[![Back to Top](https://img.shields.io/badge/-⫛_TO_TOP-0d1117?style=flat)](#readme-top)
+
+</div>
+
+<br>
+
+## ⚙️ Architecture & Design
 
 ```text
 Texte-Messenger/
@@ -189,35 +209,45 @@ client action
 ### Design Principles
 
 | Principle | How it appears |
-| --- | --- |
-| One routing source | UDP and TCP both use `ChatRoom`, so behavior does not drift by transport. |
-| Protocol stays visible | Commands are plain strings, parsed by small helpers, and covered by tests. |
-| TCP is treated honestly | TCP uses newline frames because stream reads can split or merge messages. |
-| UI is layout-based | `ui.py` uses Qt layouts instead of fixed widget geometry. |
-| Limits are explicit | Unsupported scope is documented instead of hidden behind broad claims. |
+|:--|:--|
+| **One routing source** | UDP and TCP both use `ChatRoom`, so behavior does not drift by transport. |
+| **Protocol stays visible** | Commands are plain strings, parsed by small helpers, and covered by tests. |
+| **TCP is treated honestly** | TCP uses newline frames because stream reads can split or merge messages. |
+| **UI is layout-based** | `ui.py` uses Qt layouts instead of fixed widget geometry. |
+| **Limits are explicit** | Unsupported scope is documented instead of hidden behind broad claims. |
 
 ### Design Tradeoffs
 
 | Decision | Why it improves the project |
-| --- | --- |
-| Local-first server | Keeps the demo runnable without accounts, hosting, or cloud setup. |
-| Display names, not identities | Avoids pretending to provide authentication. |
-| TCP-only attachments | Keeps file transfer reliable without inventing UDP chunking. |
-| Small command protocol | Makes routing inspectable and beginner-readable. |
-| Package plus wrappers | Gives clean imports while preserving simple `python client.py` commands. |
+|:--|:--|
+| **Local-first server** | Keeps the demo runnable without accounts, hosting, or cloud setup. |
+| **Display names, not identities** | Avoids pretending to provide authentication. |
+| **TCP-only attachments** | Keeps file transfer reliable without inventing UDP chunking. |
+| **Small command protocol** | Makes routing inspectable and beginner-readable. |
+| **Package plus wrappers** | Gives clean imports while preserving simple `python client.py` commands. |
 
-## Supported Scope
+<br>
+
+<div align="right">
+
+[![Back to Top](https://img.shields.io/badge/-⫛_TO_TOP-0d1117?style=flat)](#readme-top)
+
+</div>
+
+<br>
+
+## 📌 Supported Scope
 
 | Area | Current Support |
-| --- | --- |
-| Desktop client | PyQt6 dialog with conversation list, setup sheet, Light/Dark themes, message bubbles, and attachments |
-| UDP | Local datagram server and client messaging |
-| TCP | Local stream server with newline-framed commands |
-| Presence | Server sends `{USERS}` updates after registration changes |
-| Public messages | `ALL` broadcasts to registered clients |
-| Direct messages | `{TO}recipient|text` routes to the sender and target |
-| Attachments | Small TCP-only payloads routed as `{FILE}` and saved into `downloads/` |
-| Packaging | `texte-client`, `texte-server`, and `python -m texte` entry points |
+|:--|:--|
+| **Desktop client** | PyQt6 dialog with conversation list, setup sheet, Light/Dark themes, message bubbles, and attachments |
+| **UDP** | Local datagram server and client messaging |
+| **TCP** | Local stream server with newline-framed commands |
+| **Presence** | Server sends `{USERS}` updates after registration changes |
+| **Public messages** | `ALL` broadcasts to registered clients |
+| **Direct messages** | `{TO}recipient|text` routes to the sender and target |
+| **Attachments** | Small TCP-only payloads routed as `{FILE}` and saved into `downloads/` |
+| **Packaging** | `texte-client`, `texte-server`, and `python -m texte` entry points |
 
 ### Known Limits
 
@@ -230,7 +260,17 @@ client action
 - No `asyncio` or manual threading in the app; Qt owns the event loop.
 - The interface is tuned for desktop windows, not mobile-sized screens.
 
-## Protocol & Examples
+<br>
+
+<div align="right">
+
+[![Back to Top](https://img.shields.io/badge/-⫛_TO_TOP-0d1117?style=flat)](#readme-top)
+
+</div>
+
+<br>
+
+## 🧪 Protocol & Examples
 
 Direct messages are explicit:
 
@@ -267,7 +307,17 @@ alice {MSG}[HH:MM] Alice -> Bob: private ping
 
 Expected demo transcripts live in `examples/expected/` and are checked by tests.
 
-## Testing & Verification
+<br>
+
+<div align="right">
+
+[![Back to Top](https://img.shields.io/badge/-⫛_TO_TOP-0d1117?style=flat)](#readme-top)
+
+</div>
+
+<br>
+
+## ✅ Testing & Verification
 
 Install with development dependencies:
 
@@ -302,16 +352,37 @@ Current coverage focuses on:
 CI runs lint, type checking, format check, compile, tests, package build, and demo smoke checks
 on Python 3.12 and 3.13.
 
-## Design Notes
+<br>
+
+<div align="right">
+
+[![Back to Top](https://img.shields.io/badge/-⫛_TO_TOP-0d1117?style=flat)](#readme-top)
+
+</div>
+
+<br>
+
+## 📚 Design Notes
 
 - [Code Tour](docs/code-tour.md) explains what each source file owns.
 - [Correctness Notes](docs/correctness.md) describe the verification strategy.
 - [Protocol Notes](docs/protocol.md) list wire commands and limits.
 - [Tutorial](docs/tutorial.md) walks through a local two-client run.
+- [Examples](examples/README.md) covers the scripted demo entry point.
 - [Contributing](CONTRIBUTING.md) keeps protocol additions small and tested.
 - [Changelog](CHANGELOG.md) records the current release shape.
 
-## Extension Path
+<br>
+
+<div align="right">
+
+[![Back to Top](https://img.shields.io/badge/-⫛_TO_TOP-0d1117?style=flat)](#readme-top)
+
+</div>
+
+<br>
+
+## 🔧 Extension Path
 
 Good next steps that keep the project honest:
 
@@ -322,12 +393,22 @@ Good next steps that keep the project honest:
 - add persistence, encryption, or authentication only when those responsibilities
   are genuinely implemented
 
+<br>
+
+<div align="center">
+
+## Author
+
+**Sabneet Bains**
+
+*Quantum × AI × Scientific Computing*
+
+[LinkedIn](https://www.linkedin.com/in/sabneet-bains/) • [GitHub](https://github.com/sabneet-bains)
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
 
-<div align="right">
-
-[Back to top](#readme-top)
+<sub>“Reverse engineering is not about undoing complexity; it is about understanding design.”</sub>
 
 </div>
