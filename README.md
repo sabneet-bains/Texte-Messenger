@@ -6,7 +6,6 @@
 [![Interface](https://img.shields.io/badge/Interface-PyQt6_Desktop-8E44AD?labelColor=0d1117&style=flat)](#try-it-in-30-seconds)
 [![Transports](https://img.shields.io/badge/Transports-UDP_%2B_TCP-2E90FA?labelColor=0d1117&style=flat)](#supported-scope)
 [![Tests](https://img.shields.io/badge/Tests-pytest-2ECC71?labelColor=0d1117&style=flat)](#testing--verification)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/sabneet-bains/Texte-Messenger?quickstart=1)
 [![License: MIT](https://img.shields.io/badge/License-MIT-2ECC71?labelColor=0d1117&style=flat)](LICENSE)
 
 **A local desktop messenger with visible protocol, routing, and verification.**
@@ -25,27 +24,10 @@
 
 <br>
 
-## 🚀 Play in Codespaces
-
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/sabneet-bains/Texte-Messenger?quickstart=1)
-
-Open the repo from GitHub, wait for the Codespace to finish booting, and the browser tab lands in a real desktop session. `texte-showcase` starts two signed-in clients, a local server, and a short starter transcript so the app is immediately interactive.
-
-<div align="center">
-
-<img src="texte/assets/showcase-path.svg" alt="GitHub repo to Codespaces to browser desktop showcase flow" width="94%">
-
-</div>
-
-The browser path is documented in [docs/showcase.md](docs/showcase.md).
-
-<br>
-
 ## 🧭 Navigation
 
 | Goal | Start here | What you will see |
 |:--|:--|:--|
-| **Play in browser** | [Play in Codespaces](#play-in-codespaces) | Browser-accessible desktop session with the real PyQt app |
 | **Understand the project** | [Project Highlights](#project-highlights) | Core capabilities and evidence in one minute |
 | **Run it quickly** | [Try It in 30 Seconds](#try-it-in-30-seconds) | Copy-paste demo commands with real output |
 | **Inspect the design** | [Architecture & Design](#architecture--design) | Package layout, data flow, tradeoffs, and limits |
@@ -76,8 +58,7 @@ Texte turns a desktop chat mockup into a real, inspectable local messenger.
 | **Client commands** | `{CONNECT}`, `{DISCONNECT}`, `{REGISTER}`, `{UNREGISTER}`, `{ALL}`, `{TO}`, `{FILE}` |
 | **Server messages** | `{MSG}`, `{USERS}`, `{ERROR}`, `{FILE}` |
 | **Scripted demos** | TCP and UDP two-client demos |
-| **Showcase launcher** | `texte-showcase` for the browser-ready Codespaces session |
-| **Collected tests** | 55 |
+| **Collected tests** | 51 |
 | **CI** | Ruff, mypy, format check, compile, pytest, demo smoke checks, package build |
 
 <br>
@@ -93,7 +74,7 @@ python -m pip install -e ".[dev]" && python -m pytest
 Expected result:
 
 ```text
-55 passed
+51 passed
 ```
 
 Run the deterministic TCP demo:
@@ -159,7 +140,6 @@ Installed entry points are also available:
 texte-server tcp
 texte-server
 texte-client
-texte-showcase
 python -m texte
 ```
 
@@ -356,7 +336,6 @@ python -m pytest
 python examples/two_client_demo.py --protocol tcp
 python examples/two_client_demo.py --protocol udp
 python -m build
-texte-showcase --help
 ```
 
 Current coverage focuses on:
@@ -370,8 +349,8 @@ Current coverage focuses on:
 - Light/Dark theme completeness
 - layout-based UI source guard
 
-CI runs lint, type checking, format check, compile, tests, package build, demo
-smoke checks, and the showcase help check on Python 3.12 and 3.13.
+CI runs lint, type checking, format check, compile, tests, package build, and
+demo smoke checks on Python 3.12 and 3.13.
 
 <br>
 
@@ -387,7 +366,6 @@ smoke checks, and the showcase help check on Python 3.12 and 3.13.
 
 - [Code Tour](docs/code-tour.md) explains what each source file owns.
 - [Correctness Notes](docs/correctness.md) describe the verification strategy.
-- [Showcase Path](docs/showcase.md) explains the browser-first Codespaces flow.
 - [Protocol Notes](docs/protocol.md) list wire commands and limits.
 - [Tutorial](docs/tutorial.md) walks through a local two-client run.
 - [Examples](examples/README.md) covers the scripted demo entry point.

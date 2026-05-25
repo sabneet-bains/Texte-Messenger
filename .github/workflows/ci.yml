@@ -49,7 +49,6 @@ jobs:
           python examples/two_client_demo.py --protocol tcp --port 33142
           python examples/two_client_demo.py --protocol udp --port 33143
           texte-server --help
-          texte-showcase --help
 
       - name: Build
         run: python -m build

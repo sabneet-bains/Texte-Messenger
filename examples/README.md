@@ -3,9 +3,6 @@
 This folder contains the local two-client demo used by the root README and the
 test suite.
 
-For the browser-hosted desktop version, use `texte-showcase` inside GitHub
-Codespaces.
-
 Run the deterministic TCP path:
 
 ```bash

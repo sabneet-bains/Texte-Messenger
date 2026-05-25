@@ -41,7 +41,6 @@ dev = [
 [project.scripts]
 texte-client = "texte.client:main"
 texte-server = "texte.server:main"
-texte-showcase = "texte.showcase:main"
 
 [project.urls]
 Repository = "https://github.com/sabneet-bains/Texte-Messenger"
