@@ -1,0 +1,5 @@
+Alice signed in
+Bob signed in
+Bob received public message: [HH:MM] Alice: hello
+Bob received direct message: [HH:MM] Alice -> Bob: private ping
+UDP demo skipped file transfer; attachments are TCP-only.

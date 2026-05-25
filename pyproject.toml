@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "texte-messenger"
+version = "0.1.0"
+description = "A polished local PyQt6 UDP/TCP messenger prototype."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Sabneet Bains" }]
+keywords = ["pyqt6", "messenger", "udp", "tcp", "desktop", "networking"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Win32 (MS Windows)",
+    "Environment :: MacOS X",
+    "Environment :: X11 Applications :: Qt",
+    "Intended Audience :: Education",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Communications :: Chat",
+    "Topic :: Software Development :: User Interfaces",
+]
+dependencies = [
+    "PyQt6>=6.11,<7",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=9,<10",
+]
+dev = [
+    "build>=1.3,<2",
+    "mypy>=1.19,<2",
+    "pytest>=9,<10",
+    "ruff>=0.14,<1",
+]
+
+[project.scripts]
+texte-client = "texte.client:main"
+texte-server = "texte.server:main"
+
+[project.urls]
+Repository = "https://github.com/sabneet-bains/Texte-Messenger"
+Issues = "https://github.com/sabneet-bains/Texte-Messenger/issues"
+
+[tool.setuptools.packages.find]
+include = ["texte*"]
+
+[tool.setuptools.package-data]
+texte = ["assets/*.png", "assets/*.svg", "assets/icons/*.svg", "assets/avatars/*.svg"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.mypy]
+python_version = "3.12"
+files = ["texte", "examples", "tests"]
+check_untyped_defs = true
+warn_unused_ignores = true

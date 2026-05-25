@@ -1,264 +1,332 @@
 <div align="center"><a name="readme-top"></a>
 
-# 💬 Texte — A Python × Qt Instant Messenger
+# Texte — PyQt6 UDP/TCP Messenger
 
-[![Python](https://img.shields.io/badge/Python-3.9%2B-528ec5?logo=python&logoColor=white&labelColor=0d1117&style=flat)](https://www.python.org/)
-[![PyQt6](https://img.shields.io/badge/PyQt-6.x-f39c12?logo=qt&logoColor=white&labelColor=0d1117&style=flat)](https://riverbankcomputing.com/software/pyqt/intro)
-[![Networking](https://img.shields.io/badge/Protocol-UDP%20%7C%20TCP-lightgrey?logo=wireshark&logoColor=white&labelColor=0d1117&style=flat)](#)
-[![License: MIT](https://img.shields.io/badge/License-MIT-2ECC71?labelColor=0d1117&style=flat)](https://choosealicense.com/licenses/mit/)
+[![Python](https://img.shields.io/badge/Python-3.12%2B-528ec5?logo=python&logoColor=white&labelColor=0d1117&style=flat)](https://www.python.org/)
+[![Interface](https://img.shields.io/badge/Interface-PyQt6_Desktop-8E44AD?labelColor=0d1117&style=flat)](#try-it-in-30-seconds)
+[![Transports](https://img.shields.io/badge/Transports-UDP_%2B_TCP-2E90FA?labelColor=0d1117&style=flat)](#supported-scope)
+[![Tests](https://img.shields.io/badge/Tests-pytest-2ECC71?labelColor=0d1117&style=flat)](#testing--verification)
+[![License: MIT](https://img.shields.io/badge/License-MIT-2ECC71?labelColor=0d1117&style=flat)](LICENSE)
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/sabneet-bains/Texte-Messenger)
+**A local desktop messenger with visible protocol, routing, and verification.**
 
-**Messaging redefined — minimal, modular, and modern.**  
-<sup>*A cross-platform instant messenger integrating PyQt6, UDP/TCP networking, and real-time GUI communication systems.*</sup>
+<sup><i>PyQt6 client, UDP/TCP servers, presence, direct messages, and small TCP attachment transfer without production-sized claims.</i></sup>
 
-<img src="https://github.com/sabneet95/Texte-Messenger/blob/master/messaging.png" alt="Texte GUI Screenshot" width="800">
-
-</div>
-
-> [!NOTE]
-> <sup>Part of the <b>Foundational & Academic</b> collection — demonstrating cross-layer software design from GUI to network protocol.</sup>
-
-
-## 🧭 Table of Contents
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-- [Architecture](#-architecture)
-- [Repository Structure](#-repository-structure)
-- [Development Environment](#-development-environment)
-- [Requirements](#-requirements)
-- [Installation](#-installation)
-- [Usage](#-usage)
-- [Contributing](#-contributing)
-- [Future Work](#-future-work)
-- [Author](#-author)
-- [License](#-license)
-
-
-## 🧠 Overview
-**Texte** is a Python-based instant messenger designed with **PyQt6** for its GUI layer and **UDP/TCP** for networking.  
-It showcases modular software engineering — combining **event-driven design**, **socket programming**, and **user interface architecture**.
-
-Built for both educational and experimental use, *Texte* demonstrates real-time communication mechanics and can serve as a foundation for distributed systems research or prototype messaging apps.
-
-> [!TIP]
-> Core modules (client and server) are completely decoupled — ideal for extension into cloud or multi-user systems.
-
-<div align="right">
-
-[![Back to Top](https://img.shields.io/badge/-⫛_TO_TOP-0d1117?style=flat)](#readme-top)
+<img src="texte/assets/hero-network.svg" alt="Two PyQt6 clients routing UDP and TCP messages through a shared ChatRoom core" width="94%">
 
 </div>
-
-
-## ⚙️ Key Features
-
-| Category | Description |
-|:----------|:-------------|
-| **Modern Qt GUI** | Clean, high-DPI interface with tabs, animations, and dynamic panels. |
-| **Protocol Support** | Switch seamlessly between **UDP** and **TCP** at runtime. |
-| **Real-Time Messaging** | Message logs, timestamps, and file attachment capability. |
-| **User Panels** | Dedicated panes for server setup, login, and chat configuration. |
-| **Extensible Architecture** | Modular design supports security, logging, and user database integration. |
-
-> [!NOTE]
-> The GUI follows **Model-View-Controller** principles: interface (View), message logic (Model), and network backend (Controller).
-
-<div align="right">
-
-[![Back to Top](https://img.shields.io/badge/-⫛_TO_TOP-0d1117?style=flat)](#readme-top)
-
-</div>
-
-
-## 🧱 Architecture
-
-| Component | Role | Technology |
-|:-----------|:-----|:------------|
-| **Client (`client.py`)** | Qt application handling user interface, networking I/O, and threading. | **PyQt6**, **socket**, **asyncio** |
-| **Server (`server.py`)** | Lightweight backend managing UDP/TCP sessions, message routing, and user registration. | **Python 3.9+**, **socket**, **threading** |
-| **Communication Layer** | Transport abstraction supporting both connection-oriented and connectionless protocols. | **TCP / UDP** |
-| **UI Framework** | Event-driven widgets and signal-slot architecture. | **Qt (PyQt6)** |
-
-> [!TIP]
-> All major components (GUI, network core, assets) are **loosely coupled**, ensuring each can evolve independently.
-
-<div align="right">
-
-[![Back to Top](https://img.shields.io/badge/-⫛_TO_TOP-0d1117?style=flat)](#readme-top)
-
-</div>
-
-
-## 📂 Repository Structure
-````text
-Texte-Messenger/
-│
-├── client.py           # Main GUI client
-├── server.py           # Network server (UDP/TCP)
-├── icons/              # Toolbar and interface icons
-├── avatars/            # Profile and user avatars
-├── themes/             # Optional theme/style overrides
-├── assets/             # Logos, design resources
-├── README.md
-└── LICENSE
-````
-
-> [!TIP]
-> Directory structure is designed for **educational clarity** — client and server can be executed independently for testing.
-
-<div align="right">
-
-[![Back to Top](https://img.shields.io/badge/-⫛_TO_TOP-0d1117?style=flat)](#readme-top)
-
-</div>
-
-
-## 💻 Development Environment
-
-| Component | Tools & Versions | Purpose / Usage |
-|:-----------|:----------------|:----------------|
-| **Programming Language** | **Python 3.9+ (64-bit)** | Core environment for GUI, sockets, and event handling. |
-| **Framework** | **PyQt6 (Qt6 bindings)** | Provides the graphical interface, layout control, and event loop. |
-| **Networking** | **socket**, **asyncio**, **threading** | Manages UDP/TCP transport and concurrent messaging. |
-| **IDE** | **VS Code / PyCharm** | Recommended for debugging and development. |
-| **Asset Design** | **PowerPoint (SVG Export)**, **Photoshop / GIMP** | Used to design avatars, icons, and GUI components. |
-| **Version Control** | **Git / GitHub** | Handles version tracking, issues, and collaborative contributions. |
-| **Testing (Planned)** | **pytest**, **unittest** | Frameworks to be added for regression and performance testing. |
-
-> [!NOTE]
-> The application follows a **signal–slot architecture**, ensuring responsive UI behavior and decoupled logic between the interface, network backend, and message handling layers.
-
-<div align="right">
-
-[![Back to Top](https://img.shields.io/badge/-⫛_TO_TOP-0d1117?style=flat)](#readme-top)
-
-</div>
-
-
-## 🧰 Requirements
-````text
-Python >= 3.9
-PyQt6 >= 6.2
-````
 
 > [!IMPORTANT]
-> PyQt6 requires the **Qt runtime libraries**.  
-> On Windows, install via `pip install PyQt6`; on Linux, system packages like `python3-pyqt6` may be needed.
+> Texte is a local messenger prototype. It is not a secure messenger, not a
+> production chat service, and not a cloud platform.
 
-<div align="right">
+## Navigation
 
-[![Back to Top](https://img.shields.io/badge/-⫛_TO_TOP-0d1117?style=flat)](#readme-top)
+| Goal | Start here | What you will see |
+| --- | --- | --- |
+| Understand the project | [Project Highlights](#project-highlights) | Core capabilities and evidence in one minute |
+| Run it quickly | [Try It in 30 Seconds](#try-it-in-30-seconds) | Copy-paste demo commands with real output |
+| Inspect the design | [Architecture & Design](#architecture--design) | Package layout, data flow, tradeoffs, and limits |
+| Verify behavior | [Testing & Verification](#testing--verification) | Tests, demos, lint, compile, and build commands |
 
-</div>
+## Project Highlights
 
+Texte turns a desktop chat mockup into a real, inspectable local messenger.
 
-## 🚀 Installation
-````bash
-# Clone the repository
-git clone https://github.com/sabneet95/Texte-Messenger.git
-cd Texte-Messenger
+| Signal | Evidence in this repo |
+| --- | --- |
+| Desktop UI | PyQt6 client with a Messages-style shell, setup sheet, Light/Dark themes, message bubbles, and attachment controls |
+| Networking | Local UDP and TCP servers using `PyQt6.QtNetwork` |
+| Protocol design | Small command-prefixed protocol with explicit TCP framing |
+| Routing | Shared `ChatRoom` core for registration, presence, public messages, direct messages, and disconnect cleanup |
+| Attachments | Small TCP-only file payloads with size checks and local saving |
+| Engineering rigor | Scripted demos, expected transcripts, tests, docs, package metadata, and CI |
 
-# Install dependencies
-pip install PyQt6
-````
+### Project Snapshot
 
-> [!TIP]
-> Ensure that **icons/** and **avatars/** directories remain alongside `client.py` and `server.py`,  
-> as these assets are dynamically loaded by the Qt resource handlers at runtime.
+| Metric | Current Value |
+| --- | --- |
+| Package | `texte` |
+| Desktop toolkit | PyQt6 |
+| Server modes | UDP and TCP |
+| Client commands | `{CONNECT}`, `{DISCONNECT}`, `{REGISTER}`, `{UNREGISTER}`, `{ALL}`, `{TO}`, `{FILE}` |
+| Server messages | `{MSG}`, `{USERS}`, `{ERROR}`, `{FILE}` |
+| Scripted demos | TCP and UDP two-client demos |
+| Collected tests | 51 |
+| CI | Ruff, mypy, format check, compile, pytest, demo smoke checks, package build |
 
-<div align="right">
+## Try It in 30 Seconds
 
-[![Back to Top](https://img.shields.io/badge/-⫛_TO_TOP-0d1117?style=flat)](#readme-top)
+Install and run the test suite:
 
-</div>
+```bash
+python -m pip install -e ".[dev]" && python -m pytest
+```
 
+Expected result:
 
-## 💬 Usage
+```text
+51 passed
+```
 
-### **Running the Server**
-````bash
-# Default UDP mode
-python server.py
+Run the deterministic TCP demo:
 
-# TCP mode
-python server.py tcp
-````
+```bash
+python examples/two_client_demo.py --protocol tcp
+```
 
-### **Running the Client**
-````bash
+Output shape:
+
+```text
+Alice signed in
+Bob signed in
+Bob received public message: [09:52] Alice: hello
+Bob received direct message: [09:52] Alice -> Bob: private ping
+Bob received file: demo.txt from Alice (16 bytes)
+```
+
+Run the UDP path:
+
+```bash
+python examples/two_client_demo.py --protocol udp
+```
+
+```text
+Alice signed in
+Bob signed in
+Bob received public message: [09:52] Alice: hello
+Bob received direct message: [09:52] Alice -> Bob: private ping
+UDP demo skipped file transfer; attachments are TCP-only.
+```
+
+## Run The Desktop App
+
+Start the desktop client:
+
+```bash
 python client.py
-````
+```
 
-Once the client starts:
-- Select **protocol (UDP/TCP)** from the Server Settings panel.  
-- Match host and port with the server configuration (`127.0.0.1:33002` by default).  
-- Sign in, choose an avatar, and start messaging instantly.  
-- The interface supports **file attachments**, **chat logs**, and **custom themes**.
+By default, the client checks for a local TCP server on `127.0.0.1:33002`.
+If one is not running, it starts one in the background, signs in with the
+display name in setup, and shows other local clients as they appear.
 
-> [!NOTE]
-> The server can be hosted **locally or remotely**, making *Texte* ideal for  
-> **LAN experiments**, **distributed systems coursework**, and **network performance demonstrations**.
+Open a second client window to chat locally:
 
-<div align="right">
+```bash
+python client.py
+```
 
-[![Back to Top](https://img.shields.io/badge/-⫛_TO_TOP-0d1117?style=flat)](#readme-top)
+Manual server commands remain available for demos and advanced use:
 
-</div>
+```bash
+python server.py tcp
+python server.py
+```
 
+Installed entry points are also available:
 
-## 🤝 Contributing
-**Contributions are welcome!**
+```bash
+texte-server tcp
+texte-server
+texte-client
+python -m texte
+```
 
-1. **Open an issue** before implementing major changes.  
-2. **Follow best practices** (PEP-8 compliance, PyQt signal-slot conventions).  
-3. **Include supporting visuals or logs** for UI/network-related updates.  
-4. **Submit a pull request** detailing your implementation and testing notes.
+The setup sheet keeps advanced controls for host, port, transport, display
+name, avatar, theme, and automatic local-server startup. Attachments require
+TCP mode.
 
-> [!TIP]
-> Promising extensions: **encryption**, **async networking**, **group messaging**, or **REST/WebSocket hybrid models**.
+<details>
+<summary>Show current desktop screenshot</summary>
 
-<div align="right">
-
-[![Back to Top](https://img.shields.io/badge/-⫛_TO_TOP-0d1117?style=flat)](#readme-top)
-
-</div>
-
-
-## 🔮 Future Work
-
-| Area | Enhancement |
-|:------|:-------------|
-| **Networking** | Add persistent server-side state and broadcast support. |
-| **Security** | Integrate **TLS** or **Fernet**-based encryption layers. |
-| **Database** | Introduce **SQLite/MySQL** user profiles and chat history. |
-| **Packaging** | Bundle cross-platform executables with **PyInstaller**. |
-| **Testing & CI/CD** | Add **pytest**, **flake8**, and GitHub Actions pipelines. |
-| **UI Customization** | Expand theme controls, font scaling, and accessibility options. |
-
-> [!TIP]
-> The long-term goal is to evolve *Texte* into a **distributed systems demonstrator** —  
-> capable of simulating real-world communication protocols for educational and research purposes.
-
-<div align="right">
-
-[![Back to Top](https://img.shields.io/badge/-⫛_TO_TOP-0d1117?style=flat)](#readme-top)
-
-</div>
-
+<br>
 
 <div align="center">
 
-##
-### 👤 Author  
-**Sabneet Bains**  
-*Quantum × AI × Scientific Computing*  
-[LinkedIn](https://www.linkedin.com/in/sabneet-bains/) • [GitHub](https://github.com/sabneet-bains)
+<img src="texte/assets/messaging.png" alt="Texte PyQt6 desktop messenger screenshot" width="86%">
 
-##
-### 📄 License  
-Licensed under the [MIT License](https://choosealicense.com/licenses/mit/)
+</div>
 
-<sub>“Communication systems remind us — signal and noise are only opposites when meaning gets lost in transmission.”</sub>
+</details>
+
+## Architecture & Design
+
+```text
+Texte-Messenger/
+├── texte/
+│   ├── client.py          # ChatClient state, events, validation, rendering
+│   ├── server.py          # UDP/TCP server adapters and TCP framing
+│   ├── chat_room.py       # Shared registration, presence, and routing logic
+│   ├── protocol.py        # Message constants, parsing, formatting, framing
+│   ├── ui.py              # Layout-based PyQt6 widget construction
+│   ├── themes.py          # Built-in color palettes
+│   └── assets/            # Icons, avatars, screenshot, README hero
+├── examples/              # Scripted local demos and expected transcripts
+├── docs/                  # Protocol, correctness notes, tutorial, code tour
+├── tests/                 # Unit, GUI, demo, and network integration tests
+├── client.py              # Compatibility wrapper for python client.py
+├── server.py              # Compatibility wrapper for python server.py
+├── pyproject.toml         # Package metadata, entry points, dev tools
+├── CONTRIBUTING.md
+├── CHANGELOG.md
+└── LICENSE
+```
+
+### Data Flow
+
+```text
+client action
+  -> protocol command
+  -> UDP datagram or TCP frame
+  -> server socket adapter
+  -> ChatRoom.route(...)
+  -> explicit deliveries
+  -> client display, presence update, or saved file
+```
+
+### Design Principles
+
+| Principle | How it appears |
+| --- | --- |
+| One routing source | UDP and TCP both use `ChatRoom`, so behavior does not drift by transport. |
+| Protocol stays visible | Commands are plain strings, parsed by small helpers, and covered by tests. |
+| TCP is treated honestly | TCP uses newline frames because stream reads can split or merge messages. |
+| UI is layout-based | `ui.py` uses Qt layouts instead of fixed widget geometry. |
+| Limits are explicit | Unsupported scope is documented instead of hidden behind broad claims. |
+
+### Design Tradeoffs
+
+| Decision | Why it improves the project |
+| --- | --- |
+| Local-first server | Keeps the demo runnable without accounts, hosting, or cloud setup. |
+| Display names, not identities | Avoids pretending to provide authentication. |
+| TCP-only attachments | Keeps file transfer reliable without inventing UDP chunking. |
+| Small command protocol | Makes routing inspectable and beginner-readable. |
+| Package plus wrappers | Gives clean imports while preserving simple `python client.py` commands. |
+
+## Supported Scope
+
+| Area | Current Support |
+| --- | --- |
+| Desktop client | PyQt6 dialog with conversation list, setup sheet, Light/Dark themes, message bubbles, and attachments |
+| UDP | Local datagram server and client messaging |
+| TCP | Local stream server with newline-framed commands |
+| Presence | Server sends `{USERS}` updates after registration changes |
+| Public messages | `ALL` broadcasts to registered clients |
+| Direct messages | `{TO}recipient|text` routes to the sender and target |
+| Attachments | Small TCP-only payloads routed as `{FILE}` and saved into `downloads/` |
+| Packaging | `texte-client`, `texte-server`, and `python -m texte` entry points |
+
+### Known Limits
+
+- No encryption or authentication.
+- No persistent accounts, database, or chat history.
+- No offline delivery or message replay.
+- No group rooms beyond the public `ALL` room.
+- Attachments are intentionally small and local-demo oriented.
+- UDP does not transfer files.
+- No `asyncio` or manual threading in the app; Qt owns the event loop.
+- The interface is tuned for desktop windows, not mobile-sized screens.
+
+## Protocol & Examples
+
+Direct messages are explicit:
+
+```python
+from texte.protocol import chat_message, frame_message
+
+print(chat_message("Bob", "private ping"))
+print(frame_message("{REGISTER}Alice"))
+```
+
+```text
+{TO}Bob|private ping
+b'{REGISTER}Alice\n'
+```
+
+The routing core is pure Python:
+
+```python
+from texte.chat_room import ChatRoom
+
+room = ChatRoom()
+room.route("alice", "{REGISTER}Alice", "127.0.0.1:1")
+room.route("bob", "{REGISTER}Bob", "127.0.0.1:2")
+result = room.route("alice", "{TO}Bob|private ping", "127.0.0.1:1")
+
+for delivery in result.deliveries:
+    print(delivery.recipient, delivery.message)
+```
+
+```text
+bob {MSG}[HH:MM] Alice -> Bob: private ping
+alice {MSG}[HH:MM] Alice -> Bob: private ping
+```
+
+Expected demo transcripts live in `examples/expected/` and are checked by tests.
+
+## Testing & Verification
+
+Install with development dependencies:
+
+```bash
+python -m pip install -e ".[dev]"
+```
+
+Run the full local verification set:
+
+```bash
+python -m ruff check .
+python -m ruff format --check .
+python -m mypy texte examples tests
+python -m compileall client.py server.py texte tests examples
+python -m pytest
+python examples/two_client_demo.py --protocol tcp
+python examples/two_client_demo.py --protocol udp
+python -m build
+```
+
+Current coverage focuses on:
+
+- protocol formatting, parsing, validation, file payloads, and TCP framing
+- registration, duplicate-name rejection, presence, public routing, direct
+  routing, disconnect cleanup, and transport-specific attachment errors
+- real UDP and TCP socket integration
+- scripted demo output against expected transcripts
+- offscreen PyQt6 client construction
+- Light/Dark theme completeness
+- layout-based UI source guard
+
+CI runs lint, type checking, format check, compile, tests, package build, and demo smoke checks
+on Python 3.12 and 3.13.
+
+## Design Notes
+
+- [Code Tour](docs/code-tour.md) explains what each source file owns.
+- [Correctness Notes](docs/correctness.md) describe the verification strategy.
+- [Protocol Notes](docs/protocol.md) list wire commands and limits.
+- [Tutorial](docs/tutorial.md) walks through a local two-client run.
+- [Contributing](CONTRIBUTING.md) keeps protocol additions small and tested.
+- [Changelog](CHANGELOG.md) records the current release shape.
+
+## Extension Path
+
+Good next steps that keep the project honest:
+
+- add a visible online-user panel with richer status states
+- add file accept/reject prompts and stronger file type handling
+- add a short GIF showing two clients exchanging messages
+- add local transcript export
+- add persistence, encryption, or authentication only when those responsibilities
+  are genuinely implemented
+
+## License
+
+MIT. See [LICENSE](LICENSE).
+
+<div align="right">
+
+[Back to top](#readme-top)
 
 </div>
