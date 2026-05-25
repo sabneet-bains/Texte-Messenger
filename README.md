@@ -409,6 +409,6 @@ Good next steps that keep the project honest:
 
 MIT. See [LICENSE](LICENSE).
 
-<sub>“Reverse engineering is not about undoing complexity; it is about understanding design.”</sub>
+<sub>Local messaging stays readable when protocol, routing, and limits remain visible.</sub>
 
 </div>
