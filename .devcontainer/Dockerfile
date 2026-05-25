@@ -29,4 +29,5 @@ RUN for source in /etc/apt/sources.list.d/*; do \
         websockify \
         x11vnc \
         xvfb \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && python -m pip install --no-cache-dir "PyQt6>=6.11,<7"
