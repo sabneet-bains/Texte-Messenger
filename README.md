@@ -156,6 +156,7 @@ TCP mode.
 Texte-Messenger/
 ├── texte/
 │   ├── client.py          # ChatClient state, events, validation, rendering
+│   ├── client_support.py  # Small conversion and list-item helpers for the client
 │   ├── server.py          # UDP/TCP server adapters and TCP framing
 │   ├── chat_room.py       # Shared registration, presence, and routing logic
 │   ├── protocol.py        # Message constants, parsing, formatting, framing

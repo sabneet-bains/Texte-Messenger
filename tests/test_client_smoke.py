@@ -1,5 +1,6 @@
 import os
 import sys
+from typing import Any, cast
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 os.environ.setdefault("TEXTE_DISABLE_AUTO_START", "1")
@@ -235,7 +236,7 @@ def test_client_file_delivery_adds_file_card(tmp_path) -> None:
 
 
 def test_client_avatar_selector_updates_visible_avatar() -> None:
-    app = QtWidgets.QApplication.instance() or QtWidgets.QApplication(sys.argv)
+    _app = QtWidgets.QApplication.instance() or QtWidgets.QApplication(sys.argv)
 
     client = ChatClient()
     assert client.avatar_selector_widget.count() == 3
@@ -257,7 +258,7 @@ def test_client_avatar_selector_updates_visible_avatar() -> None:
 
 
 def test_client_commits_username_rename_while_signed_in() -> None:
-    app = QtWidgets.QApplication.instance() or QtWidgets.QApplication(sys.argv)
+    _app = QtWidgets.QApplication.instance() or QtWidgets.QApplication(sys.argv)
 
     client = ChatClient()
     client.server_connected = True
@@ -267,7 +268,7 @@ def test_client_commits_username_rename_while_signed_in() -> None:
     client.username.setText("Alex")
 
     messages: list[str] = []
-    client.send_message = lambda message, host=None, port=None: messages.append(message)  # type: ignore[assignment]
+    cast(Any, client).send_message = lambda message, host=None, port=None: messages.append(message)
 
     client._commit_username_change()
 
@@ -276,7 +277,7 @@ def test_client_commits_username_rename_while_signed_in() -> None:
     assert client.header_username.text() == "Alex"
 
     client.close()
-    assert app is not None
+    assert _app is not None
 
 
 def test_conversation_list_updates_from_presence_and_selects_recipient() -> None:
@@ -331,8 +332,8 @@ def test_start_local_session_uses_selected_udp_protocol() -> None:
     def fake_start(protocol: str, host: str, port: int) -> None:
         calls.append((protocol, host, port))
 
-    client._start_owned_server = fake_start  # type: ignore[method-assign]
-    client._connect_and_sign_in = lambda host, port, protocol=None: None  # type: ignore[assignment]
+    cast(Any, client)._start_owned_server = fake_start
+    cast(Any, client)._connect_and_sign_in = lambda host, port, protocol=None: None
     client.start_local_session()
 
     assert calls == [("udp", "127.0.0.1", 33002)]

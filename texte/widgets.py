@@ -1,5 +1,7 @@
 """Small reusable widgets that give Texte its Messages-style shape."""
 
+from collections.abc import Callable
+
 from PyQt6 import QtCore, QtGui, QtSvg, QtWidgets
 
 from texte.themes import ThemePalette
@@ -36,7 +38,7 @@ class ReactionLabel(QtWidgets.QLabel):
 
     def __init__(self, text: str = "", parent: QtWidgets.QWidget | None = None) -> None:
         super().__init__(text, parent)
-        self.click_handler = None
+        self.click_handler: Callable[[], None] | None = None
 
     def mouseReleaseEvent(self, event: QtGui.QMouseEvent | None) -> None:
         if event is not None and event.button() == QtCore.Qt.MouseButton.LeftButton:
@@ -61,7 +63,8 @@ class ReactionLabel(QtWidgets.QLabel):
 
         if selected_text:
             copy_action = menu.addAction("Copy")
-            copy_action.triggered.connect(lambda: QtGui.QGuiApplication.clipboard().setText(selected_text))
+            assert copy_action is not None
+            copy_action.triggered.connect(self._copy_selected_text(selected_text))
 
         try:
             has_all_text = bool(self.text())
@@ -72,17 +75,27 @@ class ReactionLabel(QtWidgets.QLabel):
 
         if has_selection_api and has_all_text:
             select_all_action = menu.addAction("Select All")
+            assert select_all_action is not None
             select_all_action.triggered.connect(lambda: self.setSelection(0, len(self.text())))
 
         if menu.actions():
             menu.addSeparator()
 
         react_menu = menu.addMenu("React")
+        assert react_menu is not None
         for emoji in ("👍", "❤", "😂", "😮", "😢", "👎"):
             action = react_menu.addAction(emoji)
-            action.triggered.connect(lambda _checked=False, value=emoji: self.reactionChosen.emit(value))
+            assert action is not None
+            action.triggered.connect(
+                lambda _checked=False, value=emoji: self.reactionChosen.emit(value)
+            )
 
         menu.exec(event.globalPos())
+
+    def _copy_selected_text(self, text: str) -> Callable[[], None]:
+        clipboard = QtGui.QGuiApplication.clipboard()
+        assert clipboard is not None
+        return lambda: clipboard.setText(text)
 
 
 class MessageActionPopup(QtWidgets.QFrame):
@@ -112,7 +125,9 @@ class MessageActionPopup(QtWidgets.QFrame):
             button.setText(emoji)
             button.setObjectName("Message_Action_Emoji")
             button.setAutoRaise(True)
-            button.clicked.connect(lambda _checked=False, value=emoji: self.reactionChosen.emit(value))
+            button.clicked.connect(
+                lambda _checked=False, value=emoji: self.reactionChosen.emit(value)
+            )
             reactions_row.addWidget(button)
         outer.addLayout(reactions_row)
 
@@ -122,7 +137,7 @@ class MessageActionPopup(QtWidgets.QFrame):
         action_layout.setContentsMargins(0, 0, 0, 0)
         action_layout.setSpacing(0)
 
-        def add_action(text: str, signal: QtCore.pyqtSignal) -> None:
+        def add_action(text: str, signal: QtCore.pyqtBoundSignal) -> None:
             button = QtWidgets.QToolButton(actions)
             button.setText(text)
             button.setObjectName("Message_Action_Button")
@@ -142,6 +157,7 @@ class ReactionBarPopup(QtWidgets.QFrame):
     """Compact iMessage-style reaction strip."""
 
     reactionChosen = QtCore.pyqtSignal(str)
+
     def __init__(self, parent: QtWidgets.QWidget | None = None) -> None:
         super().__init__(parent)
         self.setObjectName("Reaction_Bar_Popup")
@@ -160,7 +176,9 @@ class ReactionBarPopup(QtWidgets.QFrame):
             button.setFont(emoji_font(18))
             button.setCursor(QtCore.Qt.CursorShape.PointingHandCursor)
             button.setFlat(True)
-            button.clicked.connect(lambda _checked=False, value=emoji: self.reactionChosen.emit(value))
+            button.clicked.connect(
+                lambda _checked=False, value=emoji: self.reactionChosen.emit(value)
+            )
             layout.addWidget(button)
 
 
@@ -220,8 +238,10 @@ class SmoothListWidget(QtWidgets.QListWidget):
         super().__init__(parent)
         self.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollMode.ScrollPerPixel)
         self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.verticalScrollBar().setSingleStep(18)
-        self._wheel_animation = QtCore.QPropertyAnimation(self.verticalScrollBar(), b"value", self)
+        scrollbar = self.verticalScrollBar()
+        assert scrollbar is not None
+        scrollbar.setSingleStep(18)
+        self._wheel_animation = QtCore.QPropertyAnimation(scrollbar, b"value", self)
         self._wheel_animation.setDuration(140)
         self._wheel_animation.setEasingCurve(QtCore.QEasingCurve.Type.OutCubic)
 
@@ -233,6 +253,7 @@ class SmoothListWidget(QtWidgets.QListWidget):
             super().wheelEvent(event)
             return
         scrollbar = self.verticalScrollBar()
+        assert scrollbar is not None
         step = max(40, scrollbar.singleStep() * 4)
         target = scrollbar.value() - int(angle_delta / 120) * step
         target = max(scrollbar.minimum(), min(target, scrollbar.maximum()))
@@ -248,11 +269,13 @@ class InvisibleItemDelegate(QtWidgets.QStyledItemDelegate):
 
     def paint(
         self,
-        painter: QtGui.QPainter,
+        painter: QtGui.QPainter | None,
         option: QtWidgets.QStyleOptionViewItem,
         index: QtCore.QModelIndex,
     ) -> None:
         # Intentionally do nothing; the associated item widget renders the row.
+        if painter is None:
+            return
         return
 
     def sizeHint(
@@ -400,6 +423,7 @@ class ConversationRow(QtWidgets.QFrame):
 
     def apply_palette(self, palette: ThemePalette, *, selected: bool) -> None:
         """Apply the current theme without relying on fragile nested QSS selectors."""
+
         def _hex_luminance(hex_color: str) -> int:
             # hex_color expected like '#RRGGBB'
             try:

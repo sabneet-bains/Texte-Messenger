@@ -25,10 +25,16 @@ from typing import Literal
 
 from PyQt6 import QtCore, QtGui, QtWidgets, QtNetwork
 
-# Glass/frost effects removed for now — provide no-op fallbacks.
-def animate_entry(widget: QtWidgets.QWidget) -> None:
-    """No-op placeholder for previous glass.animate_entry; keeps call sites intact."""
-    return
+from texte.client_support import (
+    ConversationListItem,
+    entry_bool,
+    entry_int,
+    entry_strings,
+    entry_text,
+    qbytearray_to_text,
+    scrollbar_or_raise,
+)
+from texte.glass import animate_entry
 from texte.ui import setup_ui
 from texte.widgets import (
     ClickableLabel,
@@ -69,10 +75,18 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def suppress_socket_warnings(msg_type: QtCore.QtMsgType, ctx: QtCore.QMessageLogContext, msg: str) -> None:
+def suppress_socket_warnings(
+    msg_type: QtCore.QtMsgType,
+    ctx: QtCore.QMessageLogContext,
+    msg: str | None,
+) -> None:
     """Suppress noisy Qt socket cleanup warnings that don't affect functionality."""
+    if msg is None:
+        return
     # Filter out QNativeSocketEngine and socket disconnect warnings during cleanup
-    if "QNativeSocketEngine" in msg or ("QObject::disconnect" in msg and ("Socket" in msg or "Engine" in msg)):
+    if "QNativeSocketEngine" in msg or (
+        "QObject::disconnect" in msg and ("Socket" in msg or "Engine" in msg)
+    ):
         return
     # Let other messages through to stderr
     if msg_type == QtCore.QtMsgType.QtDebugMsg:
@@ -86,19 +100,6 @@ def suppress_socket_warnings(msg_type: QtCore.QtMsgType, ctx: QtCore.QMessageLog
 
 
 QtCore.qInstallMessageHandler(suppress_socket_warnings)
-
-
-class ConversationListItem(QtWidgets.QListWidgetItem):
-    """List item that preserves its logical text for tests while rendering empty."""
-
-    def __init__(self, display_text: str) -> None:
-        super().__init__()
-        self._display_text = display_text
-        super().setText("")
-        self.setData(QtCore.Qt.ItemDataRole.UserRole, display_text)
-
-    def text(self) -> str:
-        return self._display_text
 
 
 class ChatClient(QtWidgets.QWidget):
@@ -255,8 +256,11 @@ class ChatClient(QtWidgets.QWidget):
     def _configure_platform_scrollbars(self) -> None:
         """Let Qt prefer platform scrollbars instead of a custom painted one."""
         style = TransientScrollStyle(self.style())
-        self.chat_log.verticalScrollBar().setStyle(style)
-        self.chat_log.horizontalScrollBar().setStyle(style)
+        vertical = scrollbar_or_raise(self.chat_log)
+        horizontal = self.chat_log.horizontalScrollBar()
+        assert horizontal is not None
+        vertical.setStyle(style)
+        horizontal.setStyle(style)
 
     def _default_display_name(self) -> str:
         return f"Local {os.getpid() % 10_000:04d}"
@@ -306,7 +310,9 @@ class ChatClient(QtWidgets.QWidget):
         if self.user_signed_in:
             self.sign_in_button.setEnabled(True)
             return
-        ready = bool(self.server_connected and self.username.text().strip() and self.active_avatar_name)
+        ready = bool(
+            self.server_connected and self.username.text().strip() and self.active_avatar_name
+        )
         self.sign_in_button.setEnabled(ready)
 
     def _select_protocol(self, protocol: str) -> None:
@@ -426,7 +432,7 @@ class ChatClient(QtWidgets.QWidget):
         app = QtWidgets.QApplication.instance()
         if isinstance(app, QtWidgets.QApplication):
             style_hints = app.styleHints()
-            if hasattr(style_hints, "colorScheme"):
+            if style_hints is not None and hasattr(style_hints, "colorScheme"):
                 scheme = style_hints.colorScheme()
                 if scheme == QtCore.Qt.ColorScheme.Dark:
                     return "Dark"
@@ -442,9 +448,7 @@ class ChatClient(QtWidgets.QWidget):
     def _app_style(self, palette: ThemePalette) -> str:
         use_backdrop = self.native_backdrop_enabled
         app_background = (
-            self._css_color(palette.app_background, 228)
-            if use_backdrop
-            else palette.app_background
+            self._css_color(palette.app_background, 228) if use_backdrop else palette.app_background
         )
         sidebar_background = (
             self._css_color(palette.sidebar_background, 244)
@@ -457,24 +461,16 @@ class ChatClient(QtWidgets.QWidget):
             else palette.sidebar_background
         )
         field_fill = (
-            self._css_color(palette.field_fill, 248)
-            if use_backdrop
-            else palette.field_fill
+            self._css_color(palette.field_fill, 248) if use_backdrop else palette.field_fill
         )
         glass_fill = (
-            self._css_color(palette.glass_fill, 244)
-            if use_backdrop
-            else palette.glass_fill
+            self._css_color(palette.glass_fill, 244) if use_backdrop else palette.glass_fill
         )
         system_bubble = (
-            self._css_color(palette.system_bubble, 244)
-            if use_backdrop
-            else palette.system_bubble
+            self._css_color(palette.system_bubble, 244) if use_backdrop else palette.system_bubble
         )
         composer_fill = (
-            self._css_color(palette.composer_fill, 246)
-            if use_backdrop
-            else palette.composer_fill
+            self._css_color(palette.composer_fill, 246) if use_backdrop else palette.composer_fill
         )
         return f"""
         QWidget#Chat_Window {{
@@ -1108,10 +1104,10 @@ class ChatClient(QtWidgets.QWidget):
                 payload = datagram.data()
                 if not payload:
                     continue
-                self._handle_server_message(bytes(payload).decode(errors="ignore").strip())
+                self._handle_server_message(qbytearray_to_text(payload).strip())
         else:
             if self.socket.bytesAvailable() > 0:
-                self.tcp_buffer += self.socket.readAll().data().decode()
+                self.tcp_buffer += qbytearray_to_text(self.socket.readAll())
                 messages, self.tcp_buffer = split_frames(self.tcp_buffer)
                 for message in messages:
                     self._handle_server_message(message)
@@ -1208,7 +1204,7 @@ class ChatClient(QtWidgets.QWidget):
         app = QtWidgets.QApplication.instance()
         if isinstance(app, QtWidgets.QApplication):
             style_hints = app.styleHints()
-            if hasattr(style_hints, "colorSchemeChanged"):
+            if style_hints is not None and hasattr(style_hints, "colorSchemeChanged"):
                 style_hints.colorSchemeChanged.connect(self._handle_os_theme_changed)
         self.setup_button.clicked.connect(self._toggle_setup_sheet)
         self.setup_close_button.clicked.connect(lambda: self._toggle_setup_sheet(False))
@@ -1324,7 +1320,13 @@ class ChatClient(QtWidgets.QWidget):
         self.profile_popup.show()
         self.profile_popup.raise_()
 
-    def eventFilter(self, watched: QtCore.QObject, event: QtCore.QEvent) -> bool:
+    def eventFilter(
+        self,
+        watched: QtCore.QObject | None,
+        event: QtCore.QEvent | None,
+    ) -> bool:
+        if event is None:
+            return super().eventFilter(watched, event)
         if event.type() == QtCore.QEvent.Type.MouseButtonPress:
             if self.profile_popup.isVisible():
                 mouse_event = event
@@ -1334,9 +1336,8 @@ class ChatClient(QtWidgets.QWidget):
                         self.profile_popup.hide()
                         if self.avatar_selector_panel.isVisible():
                             self.avatar_selector_panel.hide()
-            if (
-                (self.reaction_bar_popup is not None and self.reaction_bar_popup.isVisible())
-                or (self.message_options_popup is not None and self.message_options_popup.isVisible())
+            if (self.reaction_bar_popup is not None and self.reaction_bar_popup.isVisible()) or (
+                self.message_options_popup is not None and self.message_options_popup.isVisible()
             ):
                 mouse_event = event
                 if isinstance(mouse_event, QtGui.QMouseEvent):
@@ -1374,9 +1375,7 @@ class ChatClient(QtWidgets.QWidget):
     def _position_avatar_selector_popup(self) -> None:
         if not hasattr(self, "temporary_avatar"):
             return
-        anchor = self.temporary_avatar.mapToGlobal(
-            QtCore.QPoint(0, self.temporary_avatar.height())
-        )
+        anchor = self.temporary_avatar.mapToGlobal(QtCore.QPoint(0, self.temporary_avatar.height()))
         popup_width = max(
             self.avatar_selector_panel.sizeHint().width(),
             self.avatar_selector_panel.minimumWidth(),
@@ -1385,7 +1384,10 @@ class ChatClient(QtWidgets.QWidget):
         screen = QtGui.QGuiApplication.screenAt(anchor)
         if screen is not None:
             available = screen.availableGeometry()
-            x = min(max(anchor.x() - popup_width + self.temporary_avatar.width(), available.left()), available.right() - popup_width)
+            x = min(
+                max(anchor.x() - popup_width + self.temporary_avatar.width(), available.left()),
+                available.right() - popup_width,
+            )
             y = min(max(anchor.y() + 8, available.top()), available.bottom() - popup_height)
         else:
             x = anchor.x() - popup_width + self.temporary_avatar.width()
@@ -1558,7 +1560,9 @@ class ChatClient(QtWidgets.QWidget):
             if isinstance(row_widget, ConversationRow):
                 row_widget.apply_palette(palette, selected=index == current_row)
         for name, tile in self.pinned_tiles.items():
-            tile.apply_palette(palette, selected=name == (self.chat_selector.currentText() or "ALL"))
+            tile.apply_palette(
+                palette, selected=name == (self.chat_selector.currentText() or "ALL")
+            )
 
     def _touch_conversation(self, recipient: str, preview: str) -> None:
         cleaned_preview = preview.strip() or self._conversation_preview(recipient)
@@ -1569,8 +1573,10 @@ class ChatClient(QtWidgets.QWidget):
     def _store_conversation_entry(self, recipient: str, entry: dict[str, object]) -> None:
         self.conversation_history.setdefault(recipient or "ALL", []).append(entry)
 
-    def _update_message_reaction(self, recipient: str, entry: dict[str, object], reaction: str) -> None:
-        reactions = list(entry.get("reactions", []))
+    def _update_message_reaction(
+        self, recipient: str, entry: dict[str, object], reaction: str
+    ) -> None:
+        reactions = entry_strings(entry, "reactions")
         if reactions == [reaction]:
             reactions = []
         else:
@@ -1602,7 +1608,7 @@ class ChatClient(QtWidgets.QWidget):
         self._hide_message_action_popup()
 
         popup = ReactionBarPopup(self)
-        body_text = str(entry.get("text", ""))
+        body_text = entry_text(entry, "text")
         popup.reactionChosen.connect(
             lambda emoji: self._update_message_reaction(conversation, entry, emoji)
         )
@@ -1643,7 +1649,7 @@ class ChatClient(QtWidgets.QWidget):
         popup = MessageOptionsPopup(self)
         popup.replyRequested.connect(lambda: self._prepare_reply(sender, body_text))
         popup.stickerRequested.connect(lambda: self._show_sticker_placeholder(body_text))
-        popup.copyRequested.connect(lambda: QtGui.QGuiApplication.clipboard().setText(body_text))
+        popup.copyRequested.connect(lambda: self._copy_text_to_clipboard(body_text))
         popup.translateRequested.connect(lambda: self._show_translate_placeholder(body_text))
         popup.moreRequested.connect(lambda: self._show_message_details(body_text, sender))
 
@@ -1723,8 +1729,7 @@ class ChatClient(QtWidgets.QWidget):
         QtWidgets.QMessageBox.information(
             self,
             "Translate",
-            "Translation is not implemented yet.\n\n"
-            f"Message:\n{body_text}",
+            f"Translation is not implemented yet.\n\nMessage:\n{body_text}",
         )
 
     def _show_sticker_placeholder(self, body_text: str) -> None:
@@ -1732,9 +1737,13 @@ class ChatClient(QtWidgets.QWidget):
         QtWidgets.QMessageBox.information(
             self,
             "Add Sticker",
-            "Sticker placement is not implemented yet.\n\n"
-            f"Message:\n{body_text}",
+            f"Sticker placement is not implemented yet.\n\nMessage:\n{body_text}",
         )
+
+    def _copy_text_to_clipboard(self, text: str | None = None) -> None:
+        clipboard = QtGui.QGuiApplication.clipboard()
+        assert clipboard is not None
+        clipboard.setText(text or "")
 
     def _show_message_details(self, body_text: str, sender: str) -> None:
         self._hide_message_action_popup()
@@ -1771,33 +1780,33 @@ class ChatClient(QtWidgets.QWidget):
         for entry in self.conversation_history.get(recipient or "ALL", []):
             entry_type = str(entry.get("type", "text"))
             if entry_type == "media":
-                path_value = entry.get("path")
-                if not isinstance(path_value, str):
+                path_value = entry_text(entry, "path")
+                if not path_value:
                     continue
                 self._add_media_card(
                     sender=str(entry.get("sender", recipient)),
                     path=Path(path_value),
-                    caption=str(entry.get("caption", "")),
-                    reactions=[str(value) for value in entry.get("reactions", [])],
-                    thread_label=str(entry["thread_label"]) if entry.get("thread_label") else None,
-                    outgoing=bool(entry.get("outgoing", False)),
+                    caption=entry_text(entry, "caption"),
+                    reactions=entry_strings(entry, "reactions"),
+                    thread_label=entry_text(entry, "thread_label") or None,
+                    outgoing=entry_bool(entry, "outgoing"),
                     conversation=recipient,
                     store=False,
                 )
             elif entry_type == "file":
                 self._add_file_card(
                     sender=str(entry.get("sender", recipient)),
-                    filename=str(entry.get("filename", "")),
-                    byte_count=int(entry.get("byte_count", 0)),
+                    filename=entry_text(entry, "filename"),
+                    byte_count=entry_int(entry, "byte_count"),
                     conversation=recipient,
                     store=False,
                 )
             else:
                 self._add_chat_text(
-                    str(entry.get("text", "")),
+                    entry_text(entry, "text"),
                     str(entry.get("kind", "incoming")),
                     conversation=recipient,
-                    reactions=[str(value) for value in entry.get("reactions", [])],
+                    reactions=entry_strings(entry, "reactions"),
                     entry=entry,
                     store=False,
                 )
@@ -1823,6 +1832,8 @@ class ChatClient(QtWidgets.QWidget):
     def _rebuild_pinned_conversations(self, recipients: list[str]) -> None:
         while self.pinned_layout.count():
             item = self.pinned_layout.takeAt(0)
+            if item is None:
+                continue
             widget = item.widget()
             if widget is not None:
                 widget.deleteLater()
@@ -1835,7 +1846,9 @@ class ChatClient(QtWidgets.QWidget):
         if not show_pinned:
             return
         for index, recipient in enumerate(pinned_recipients):
-            tile = PinnedConversationTile(recipient, self._avatar_text(recipient), self.pinned_widget)
+            tile = PinnedConversationTile(
+                recipient, self._avatar_text(recipient), self.pinned_widget
+            )
             tile.clicked.connect(
                 lambda _checked=False, name=recipient: self._set_active_recipient(name)
             )
@@ -1867,7 +1880,7 @@ class ChatClient(QtWidgets.QWidget):
         bubble = QtWidgets.QFrame()
         bubble.setObjectName("Message_Bubble")
         bubble.setAttribute(QtCore.Qt.WidgetAttribute.WA_StyledBackground, True)
-        body_label = ReactionLabel(details["body"])
+        body_label = ReactionLabel(str(details["body"] or ""))
         body_label.setWordWrap(True)
         bubble.setMaximumWidth(self._bubble_width())
         body_label.setTextInteractionFlags(QtCore.Qt.TextInteractionFlag.TextSelectableByMouse)
@@ -1883,9 +1896,7 @@ class ChatClient(QtWidgets.QWidget):
                 "}"
             )
             # Use primary text for system messages to ensure contrast in dark themes
-            body_label.setStyleSheet(
-                f"color: {palette.primary_text}; background: transparent;"
-            )
+            body_label.setStyleSheet(f"color: {palette.primary_text}; background: transparent;")
             align = QtCore.Qt.AlignmentFlag.AlignHCenter
         elif kind == "outgoing":
             bubble.setStyleSheet(
@@ -1901,16 +1912,14 @@ class ChatClient(QtWidgets.QWidget):
                 "border: none; border-radius: 17px; padding: 8px 12px;"
                 "}"
             )
-            body_label.setStyleSheet(
-                f"color: {palette.primary_text}; background: transparent;"
-            )
+            body_label.setStyleSheet(f"color: {palette.primary_text}; background: transparent;")
             align = QtCore.Qt.AlignmentFlag.AlignLeft
 
         bubble_layout = QtWidgets.QVBoxLayout(bubble)
         bubble_layout.setContentsMargins(0, 0, 0, 0)
         bubble_layout.addWidget(body_label)
 
-        current_reactions = list(entry.get("reactions", reactions or []))
+        current_reactions = entry_strings(entry, "reactions") or list(reactions or [])
         reaction_badge = None
 
         container = QtWidgets.QWidget()
@@ -1979,7 +1988,9 @@ class ChatClient(QtWidgets.QWidget):
             reaction_badge.show()
             QtCore.QTimer.singleShot(
                 0,
-                lambda c=container, b=bubble, badge=reaction_badge: self._position_reaction_badge(c, b, badge),
+                lambda c=container, b=bubble, badge=reaction_badge: self._position_reaction_badge(
+                    c, b, badge
+                ),
             )
         if isinstance(body_label, ReactionLabel):
             body_label.click_handler = partial(
@@ -2331,7 +2342,9 @@ class ChatClient(QtWidgets.QWidget):
             layout.addWidget(
                 thread,
                 0,
-                QtCore.Qt.AlignmentFlag.AlignRight if outgoing else QtCore.Qt.AlignmentFlag.AlignLeft,
+                QtCore.Qt.AlignmentFlag.AlignRight
+                if outgoing
+                else QtCore.Qt.AlignmentFlag.AlignLeft,
             )
 
         self.chat_log.addItem(item)

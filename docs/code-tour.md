@@ -22,6 +22,7 @@ client widgets
 | `texte/chat_room.py` | Registration, presence, broadcast, direct routing | UDP and TCP share one routing source of truth. |
 | `texte/server.py` | Qt socket adapters and CLI args | Network events are translated into `ChatRoom.route(...)` calls. |
 | `texte/client.py` | Client state, events, validation, rendering | UI actions become protocol commands; server messages become visible state. |
+| `texte/client_support.py` | Small coercion helpers and list items | Keeps the client readable without hiding any domain behavior. |
 | `texte/ui.py` | Layout-based widget construction | Window geometry comes from Qt layouts, not fixed pixel placement. |
 | `texte/themes.py` | Built-in palettes | Theme data stays separate from event handling. |
 

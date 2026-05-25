@@ -364,13 +364,13 @@ def _build_chat_area(client) -> None:
         chat_shell,
     )
     client.theme_switch.setToolTip("Switch light or dark theme")
-    
+
     # Create centered profile section (avatar + username)
     profile_section = QtWidgets.QWidget(chat_shell)
     profile_layout = QtWidgets.QVBoxLayout(profile_section)
     profile_layout.setContentsMargins(0, 0, 0, 0)
     profile_layout.setSpacing(4)
-    
+
     client.user_avatar = _icon_button(
         profile_section,
         client._asset_path("avatars", "user1.svg"),
@@ -379,14 +379,14 @@ def _build_chat_area(client) -> None:
     client.user_avatar.setObjectName("user1")
     client.user_avatar.setEnabled(False)
     client.user_avatar.setToolTip("Profile")
-    
+
     client.header_username = QtWidgets.QLabel("Profile")
     client.header_username.setObjectName("Header_Username")
     client.header_username.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-    
+
     profile_layout.addWidget(client.user_avatar, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
     profile_layout.addWidget(client.header_username, 0, QtCore.Qt.AlignmentFlag.AlignHCenter)
-    
+
     header.addWidget(client.chat_header_avatar, 0, QtCore.Qt.AlignmentFlag.AlignVCenter)
     header.addLayout(title_stack, 0)
     header.addStretch(1)

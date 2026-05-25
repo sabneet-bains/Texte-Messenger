@@ -165,7 +165,9 @@ def test_tcp_server_exits_after_last_client_disconnects() -> None:
     try:
         _connect_tcp(client_socket, port)
         client.send("{REGISTER}Alice")
-        assert client.recv_until(lambda text: text == "{MSG}Welcome Alice!") == "{MSG}Welcome Alice!"
+        assert (
+            client.recv_until(lambda text: text == "{MSG}Welcome Alice!") == "{MSG}Welcome Alice!"
+        )
         client.send("{DISCONNECT}")
         deadline = time.time() + 5
         while time.time() < deadline:
