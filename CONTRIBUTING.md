@@ -12,6 +12,7 @@ python -m mypy texte examples tests
 python -m compileall client.py server.py texte tests examples
 python -m pytest
 python -m build
+texte-showcase --help
 ```
 
 ## Adding Protocol Behavior

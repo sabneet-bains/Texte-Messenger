@@ -2,6 +2,14 @@
 
 All notable changes for this project are tracked here.
 
+## Unreleased
+
+### Showcase Path
+
+- Added a Codespaces-ready browser showcase with `texte-showcase`.
+- Added a browser-accessible remote desktop startup path for the real PyQt6 app.
+- Added documentation and visual assets for the GitHub-first launch flow.
+
 ## 0.1.0 - Local PyQt6 Messenger Prototype
 
 ### What Became Possible

@@ -2,6 +2,9 @@
 
 This walkthrough runs Texte locally with two clients.
 
+If you want the browser-hosted version that opens directly from GitHub, use the
+Codespaces showcase path in [docs/showcase.md](showcase.md).
+
 ## 1. Install
 
 ```bash

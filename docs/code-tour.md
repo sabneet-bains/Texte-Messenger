@@ -23,6 +23,7 @@ client widgets
 | `texte/server.py` | Qt socket adapters and CLI args | Network events are translated into `ChatRoom.route(...)` calls. |
 | `texte/client.py` | Client state, events, validation, rendering | UI actions become protocol commands; server messages become visible state. |
 | `texte/client_support.py` | Small coercion helpers and list items | Keeps the client readable without hiding any domain behavior. |
+| `texte/showcase.py` | Codespaces launcher and curated session setup | Opens the real app in a ready-to-use browser desktop path. |
 | `texte/ui.py` | Layout-based widget construction | Window geometry comes from Qt layouts, not fixed pixel placement. |
 | `texte/themes.py` | Built-in palettes | Theme data stays separate from event handling. |
 
@@ -34,6 +35,7 @@ client widgets
 | `examples/expected/` | Demo output contracts | Keeps README-style examples tied to real behavior. |
 | `docs/protocol.md` | Wire command reference | States the exact supported messages and limits. |
 | `docs/correctness.md` | Verification notes | Explains what the tests prove and what they do not prove. |
+| `docs/showcase.md` | Browser-first showcase path | Documents how GitHub Codespaces opens the real app in a browser tab. |
 | `tests/` | Behavior contract | Covers pure protocol logic, routing, demos, and real UDP/TCP sockets. |
 
 The simple-code signature is intentional: domain names, explicit deliveries,

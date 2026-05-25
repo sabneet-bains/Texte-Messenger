@@ -49,4 +49,5 @@ python -m pytest
 python examples/two_client_demo.py --protocol tcp
 python examples/two_client_demo.py --protocol udp
 python -m build
+texte-showcase --help
 ```
