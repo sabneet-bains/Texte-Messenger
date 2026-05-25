@@ -4,14 +4,12 @@
     "dockerfile": "Dockerfile"
   },
   "forwardPorts": [6080],
-  "waitFor": "postCreateCommand",
   "portsAttributes": {
     "6080": {
       "label": "Texte Showcase",
       "onAutoForward": "openBrowser"
     }
   },
-  "postCreateCommand": "python -m pip install -e '.[dev]'",
   "postStartCommand": "bash .devcontainer/start-showcase.sh",
   "customizations": {
     "vscode": {

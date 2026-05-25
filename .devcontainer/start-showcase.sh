@@ -7,6 +7,26 @@ export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp/xdg-runtime-${UID:-$(id -u)}}"
 mkdir -p "$XDG_RUNTIME_DIR"
 chmod 700 "$XDG_RUNTIME_DIR"
 
+nohup bash <<'EOF' >/tmp/texte-showcase-bootstrap.log 2>&1 &
+set -euo pipefail
+
+bootstrap_lock=/tmp/texte-showcase-bootstrap.lock
+bootstrap_pid="$bootstrap_lock/pid"
+
+if mkdir "$bootstrap_lock" 2>/dev/null; then
+  printf '%s\n' "$$" >"$bootstrap_pid"
+else
+  if [ -f "$bootstrap_pid" ] && ! kill -0 "$(cat "$bootstrap_pid")" 2>/dev/null; then
+    rm -rf "$bootstrap_lock"
+    mkdir "$bootstrap_lock"
+    printf '%s\n' "$$" >"$bootstrap_pid"
+  else
+    exit 0
+  fi
+fi
+
+trap 'rm -rf "$bootstrap_lock"' EXIT
+
 if ! python - <<'PY' >/dev/null 2>&1; then
 import PyQt6  # noqa: F401
 PY
@@ -38,3 +58,6 @@ fi
 if ! pgrep -f "texte-showcase --protocol tcp" >/dev/null 2>&1; then
   nohup texte-showcase --protocol tcp >/tmp/texte-showcase-app.log 2>&1 &
 fi
+EOF
+
+exit 0
