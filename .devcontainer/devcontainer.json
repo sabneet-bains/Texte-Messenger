@@ -4,6 +4,7 @@
     "dockerfile": "Dockerfile"
   },
   "forwardPorts": [6080],
+  "waitFor": "postCreateCommand",
   "portsAttributes": {
     "6080": {
       "label": "Texte Showcase",

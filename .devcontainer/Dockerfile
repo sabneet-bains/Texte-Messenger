@@ -1,6 +1,14 @@
 FROM mcr.microsoft.com/devcontainers/python:1-3.12-bookworm
 
-RUN apt-get update \
+# The base image carries an inherited Yarn apt source that breaks `apt-get update`
+# in Codespaces when its signing key is unavailable. Remove it before installing
+# the Qt/X11 stack we actually need.
+RUN for source in /etc/apt/sources.list.d/*; do \
+        if [ -f "$source" ] && grep -q 'dl.yarnpkg.com' "$source"; then \
+            rm -f "$source"; \
+        fi; \
+    done \
+    && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         fluxbox \
         libegl1 \

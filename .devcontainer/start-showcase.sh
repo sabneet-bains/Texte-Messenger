@@ -7,6 +7,13 @@ export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp/xdg-runtime-${UID:-$(id -u)}}"
 mkdir -p "$XDG_RUNTIME_DIR"
 chmod 700 "$XDG_RUNTIME_DIR"
 
+if ! python - <<'PY' >/dev/null 2>&1; then
+import PyQt6  # noqa: F401
+PY
+  echo "Texte dependencies are missing; installing the editable package first."
+  python -m pip install -e '.[dev]'
+fi
+
 if ! pgrep -f "Xvfb ${DISPLAY}" >/dev/null 2>&1; then
   nohup Xvfb "$DISPLAY" -screen 0 1800x1000x24 -ac +extension GLX +render -noreset \
     >/tmp/texte-showcase-xvfb.log 2>&1 &
